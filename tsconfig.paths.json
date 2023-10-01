@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@Components/*": ["./src/components/*"],
+      "@Constants/*": ["./src/constants/*"],
+      "@Pages/*": ["./src/pages/*"],
+      "@Interfaces/*": ["./src/interfaces/*"],
+      "@Types/*": ["./src/types/*"],
+      "@Enums/*": ["./src/enums/*"],
+      "@Features/*": ["./src/features/*"],
+      "@Hooks/*": ["./src/hooks/*"],
+      "@Utils/*": ["./src/utils/*"],
+      "@Backgrounds/*": ["./src/assets/images/backgrounds/*"],
+      "@Icons/*": ["./src/assets/images/icons/*"],
+      "@Sounds/*": ["./src/assets/sounds/*"],
+      "@Apps/*": ["./src/apps/*"],
+      "@Chat/*": ["./src/apps/Chat/*"],
+      "@Calculator/*": ["./src/apps/Calculator/*"],
+      "@Minesweeper/*": ["./src/apps/Minesweeper/*"],
+      "@ToDo/*": ["./src/apps/ToDo/*"],
+      "@Translate/*": ["./src/apps/Translate/*"],
+      "@Simon/*": ["./src/apps/Simon/*"],
+      "@Settings/*": ["./src/apps/Settings/*"],
+      "@Terminal/*": ["./src/apps/Terminal/*"]
+    }
+  }
+}

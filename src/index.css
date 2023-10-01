@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  color: inherit;
+
+  font-family: inherit;
+}
+
+:root {
+  --topBarHeight: 4vh;
+  --bottomPartHeight: 4vh;
+  --boxShadow6: 6px 3px 6px #000;
+
+  font-size: 2vh;
+}
+
+.darkTheme {
+  /* Global */
+  --layoutBackgroundColor: #131313;
+  --fontColor: #ececec;
+  --secondaryColor: #282828;
+
+  /* Window */
+  --windowTopBackground: rgb(23 23 24 / 0.97);
+  --windowBodyBackground: rgb(23 23 24);
+
+  /* Calculator */
+  --calculatorBackground: rgb(31 31 31);
+  --calculatorInputBorder: #515151;
+
+  /* Minesweeper */
+  --minesweeeperNodeDefaultBackground: #292929;
+
+  /* BottomTab */
+  --bottomTabBorder: #c1c3c1;
+  --activeBottomTab: #272827;
+  --closedBottomTab: #2d2d2d;
+  --onHoverBottomTab: #717272;
+  --onActiveBottomTab: #272827;
+  --bottomTabBackground: transparent;
+
+  /* Avatar */
+  --avatarBackgroundColor: #696969;
+
+  color: #ececec;
+}
+
+.lightTheme {
+  /* Global */
+  --layoutBackgroundColor: #ececec;
+  --fontColor: #373737;
+  --buttonColor: #b5b5b5;
+  --secondaryColor: #c4c4c4;
+
+  /* Window */
+  --windowTopBackground: rgb(255 255 255 / 0.97);
+  --windowBodyBackground: rgb(210 210 210);
+
+  /* Calculator */
+  --calculatorBackground: rgb(193 193 193);
+  --calculatorInputBorder: #000;
+
+  /* Minesweeper */
+  --minesweeeperNodeDefaultBackground: #b5b5b5;
+
+  /* BottomTab */
+  --bottomTabBorder: #1e6cc1;
+  --activeBottomTab: #a1a6d9;
+  --closedBottomTab: #353535;
+  --onHoverBottomTab: #9d9d9d;
+  --onActiveBottomTab: #c6c6c6;
+
+  /* Avatar */
+  --avatarBackgroundColor: #cdacac;
+
+  color: #373737;
+}
+
+.blueTheme {
+  /* Global */
+  --layoutBackgroundColor: #446acf;
+  --fontColor: #efefef;
+  --secondaryColor: #0463a7;
+
+  /* Window */
+  --windowTopBackground: rgb(83 176 241 / 0.97);
+  --windowBodyBackground: #1387d6;
+
+  /* Calculator */
+  --calculatorBackground: rgb(45 155 214);
+  --calculatorInputBorder: #021251;
+
+  /* Minesweeper */
+  --minesweeeperNodeDefaultBackground: #2c41a9;
+
+  /* BottomTab */
+  --bottomTabBorder: #b8b8b8;
+  --activeBottomTab: #041c5f;
+  --closedBottomTab: #353535;
+  --onHoverBottomTab: #072b9b;
+  --onActiveBottomTab: #041c5f;
+  --bottomTabBackground: transparent;
+
+  /* Avatar */
+  --avatarBackgroundColor: #04266e;
+
+  color: #efefef;
+}
+
+.greenTheme {
+  /* Global */
+  --layoutBackgroundColor: #43ae58;
+  --fontColor: #efefef;
+  --secondaryColor: #439440;
+
+  /* Window */
+  --windowTopBackground: rgb(8 164 31 / 0.97);
+  --windowBodyBackground: #43ae58;
+
+  /* Calculator */
+  --calculatorBackground: rgb(24 110 20);
+  --calculatorInputBorder: #024e04;
+
+  /* BottomTab */
+  --bottomTabBorder: #c1c3c1;
+  --activeBottomTab: #045416;
+  --closedBottomTab: #5b5b5b;
+  --onHoverBottomTab: #27be6e;
+  --onActiveBottomTab: #c6c6c6;
+  --bottomTabBackground: #0c8a18;
+
+  /* Avatar */
+  --avatarBackgroundColor: #257230;
+
+  /* Minesweeper */
+  --minesweeeperNodeDefaultBackground: #024e11;
+
+  color: #efefef;
+}
+
+body {
+  overflow: hidden;
+
+  margin: 0;
+
+  color: var(--font-color);
+
+  font-family: Nunito, source-code-pro, Menlo, Monaco, Consolas, monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, monospace;
+}
+
+/* stylelint-disable */
+.Toastify__toast--dark {
+  bottom: 1rem !important;
+
+  border-radius: 0.5rem !important;
+  background-color: var(--layoutBackgroundColor) !important;
+}

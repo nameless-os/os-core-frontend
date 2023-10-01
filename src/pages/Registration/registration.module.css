@@ -1,0 +1,134 @@
+.loginForm {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+
+  padding: 10rem;
+}
+
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+}
+
+.closeBtn {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  right: 0;
+
+  padding: 0.5rem 3rem;
+
+  font-size: 2rem;
+}
+
+.input:focus {
+  outline: 1px solid blue;
+}
+
+.overlay {
+  position: absolute;
+
+  width: 100%;
+  height: 100vh;
+
+  transform: scale(1.1);
+  filter: blur(5px);
+
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  font-size: 1.2rem;
+}
+
+.label input {
+  width: 20rem;
+  padding: 0.4rem;
+
+  border: none;
+  border-radius: 3px;
+  background-color: var(--secondaryColor);
+
+  font-size: 1rem;
+}
+
+.inputErrorDefault {
+  opacity: 0;
+  color: #f50303;
+
+  font-size: 1rem;
+}
+
+.inputError {
+  opacity: 1;
+}
+
+.invalidInput {
+  outline: 2px solid #f64747;
+}
+
+.formErrorDefault {
+  opacity: 0;
+  color: #f64747;
+}
+
+.formError {
+  opacity: 1;
+}
+
+.registration a {
+  color: inherit;
+}
+
+.registration a:hover {
+  transition: color 0.15s;
+
+  color: #d9d8d8;
+}
+
+.registration a:active {
+  transition: color 0.15s;
+
+  color: #606060;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.changePasswordVisibility {
+  width: 1.8rem;
+  margin: 0.2rem;
+  padding: 0.2rem;
+
+  background-color: transparent;
+
+  font-size: 1rem;
+}
+
+.empty {
+  width: 2.2rem;
+  height: 0.5rem;
+}
+
+.inputBtnContainer {
+  display: flex;
+}
+
+.signUp {
+  min-width: 7rem;
+  padding: 0.5rem;
+}

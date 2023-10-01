@@ -1,0 +1,26 @@
+.container {
+  position: fixed;
+  z-index: 1000;
+  bottom: 0;
+
+  display: flex;
+
+  width: 100%;
+  height: var(--bottomPartHeight);
+
+  background-color: var(--layoutBackgroundColor);
+}
+
+.logBtn {
+  position: absolute;
+  right: 0;
+
+  width: 4rem;
+  height: 100%;
+
+  border-left: 1px solid rgb(14 14 14 / 0.15);
+  border-radius: 0 !important;
+  background: transparent !important;
+
+  font-size: 1.5rem;
+}

@@ -1,0 +1,23 @@
+.button {
+  cursor: pointer;
+
+  transition: filter 0.15s linear;
+
+  border: none;
+  border-radius: 3px;
+  background-color: var(--secondaryColor);
+
+  font-size: 1rem;
+}
+
+.button:disabled {
+  cursor: default;
+}
+
+.button:hover:enabled {
+  filter: brightness(0.85);
+}
+
+.button:active:enabled {
+  filter: brightness(0.7);
+}

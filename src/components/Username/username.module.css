@@ -1,0 +1,13 @@
+.username {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+
+  width: 100vw;
+
+  text-align: center;
+
+  background-color: transparent;
+
+  font-size: 1.2rem;
+}

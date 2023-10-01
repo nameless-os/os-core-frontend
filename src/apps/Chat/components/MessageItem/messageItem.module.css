@@ -1,0 +1,67 @@
+.msgContainer {
+  display: flex;
+
+  width: 100%;
+  min-height: 80px;
+}
+
+.usernameAndDate {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 0.3rem;
+
+  font-size: 0.7rem;
+}
+
+.msgMain {
+  position: relative;
+  bottom: 20px;
+
+  width: 80%;
+  max-width: 20rem;
+  margin: 0 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.msgContent {
+  min-height: 40px;
+  margin-bottom: 15px;
+  padding: 0.5rem;
+
+  word-wrap: break-word;
+
+  border-radius: 10px 3px 15px;
+  background-color: var(--secondaryColor);
+}
+
+.msgContent img {
+  max-width: 100%;
+
+  border-radius: 10px;
+}
+
+.usernameAndDate button {
+  border: none;
+  background-color: transparent;
+}
+
+.myMsg {
+  flex-direction: row-reverse;
+}
+
+.toYou {
+  filter: brightness(0.75);
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.notReadedMessage {
+  font-size: 0.4rem;
+}
+
+.readedMessage {
+  display: none;
+}

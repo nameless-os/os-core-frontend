@@ -1,0 +1,52 @@
+.selectContainer {
+  margin-bottom: 0.5rem;
+  padding: 0.3rem;
+
+  border: 2px solid var(--secondaryColor);
+  border-radius: 0.2rem;
+}
+
+.categoryName {
+  margin-left: 0.2rem;
+  padding-bottom: 0.5rem;
+}
+
+.findInput {
+  width: calc(100% - 4px);
+  margin: 2px;
+  margin-bottom: 0.3rem;
+  padding: 0.3rem;
+  padding-left: calc(1rem + 15px);
+
+  color: var(--fontColor);
+  border: 0;
+  background-color: var(--secondaryColor);
+
+  font-family: inherit;
+
+  font-size: 1rem;
+}
+
+.findContainer {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.findContainer svg {
+  position: absolute;
+  left: 10px;
+
+  cursor: default;
+}
+
+.category {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggleCollapseButton {
+  padding: 0.2rem 1.5rem;
+}

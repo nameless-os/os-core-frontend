@@ -1,0 +1,12 @@
+{
+  "apps": {
+    "Terminal": "Терминал",
+    "Settings": "Настройки",
+    "Chat": "Чат",
+    "Simon": "Саймон",
+    "ToDo": "Список дел",
+    "Calculator": "Калькулятор",
+    "Minesweeper": "Сапёр",
+    "Translate": "Переводчик"
+  }
+}

@@ -1,0 +1,32 @@
+.wrapper {
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  height: 100%;
+  padding-right: 0.4rem;
+
+  background-color: transparent;
+}
+
+.wrapperWithBtn {
+  position: relative;
+}
+
+.toggleVisibilityBtn {
+  position: absolute;
+  top: calc(50% - 3rem);
+  right: -12px;
+
+  height: 6rem;
+  padding: 0.2rem;
+
+  border: none;
+  border-radius: 0 10px 10px 0;
+  background-color: var(--secondaryColor);
+
+  font-size: 1rem;
+}
+
+.closeBtn {
+  right: -8px;
+}

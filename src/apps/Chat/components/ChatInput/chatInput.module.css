@@ -1,0 +1,67 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 3rem;
+  margin: 1rem 1rem 0 1.5rem;
+}
+
+.wrapper textarea {
+  width: calc(100% - 6rem);
+  height: 80%;
+  padding: 0.3rem;
+
+  resize: none;
+
+  color: var(--fontColor);
+
+  border: none;
+
+  border-radius: 3px;
+  background-color: var(--secondaryColor);
+
+  font-family: inherit;
+
+  font-size: 1rem;
+}
+
+.smileBtn {
+  color: #efe551;
+  border: 3px solid var(--windowBodyBackground);
+  border-radius: 50%;
+  background-color: #4a4a4a;
+}
+
+.smileBtn:hover {
+  color: #e9db2b;
+}
+
+.smileBtn:active {
+  color: #989108;
+}
+
+.btn {
+  cursor: pointer;
+  transition: color 0.15s ease-in;
+
+  font-size: 2rem;
+}
+
+.sendBtn {
+  color: #fffafa;
+}
+
+.sendBtn:hover {
+  color: #a4a4a4;
+}
+
+.sendBtn:active {
+  color: #545454;
+}
+
+.smilePicker {
+  position: absolute;
+  right: 4rem;
+  bottom: 4rem;
+}

@@ -1,0 +1,18 @@
+.container {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: var(--topBarHeight);
+
+  user-select: none;
+
+  background-color: var(--layoutBackgroundColor);
+
+  font-size: 1.5rem;
+}

@@ -1,0 +1,17 @@
+.fullscreenButton {
+  width: 4rem;
+
+  text-align: center;
+  vertical-align: middle;
+
+  font-size: 1.5rem;
+}
+
+.fullscreenButtonContainer {
+  height: 100%;
+
+  border-left: 1px solid rgb(14 14 14 / 0.15);
+
+  border-radius: 0;
+  background: transparent;
+}

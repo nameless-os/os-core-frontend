@@ -1,0 +1,26 @@
+.userSelectItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  width: 50%;
+  margin: 0 auto;
+  margin-bottom: 0.2rem;
+
+  border-radius: 2px;
+  background-color: var(--secondaryColor);
+  filter: brightness(0.75);
+}
+
+.userSelectButton {
+  margin-left: 5rem;
+
+  background-color: transparent;
+
+  font-size: 1.7rem;
+}
+
+.selectedItem {
+  border: 2px solid var(--calculatorInputBorder);
+  filter: brightness(1);
+}

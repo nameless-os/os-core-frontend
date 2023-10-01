@@ -1,0 +1,11 @@
+.wrapper {
+  height: calc(100% - 6.5rem);
+  margin-left: 1rem;
+  padding: 0.5rem;
+}
+
+.messagesList {
+  padding-top: 0.9rem;
+
+  list-style: none;
+}

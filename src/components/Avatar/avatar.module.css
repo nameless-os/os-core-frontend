@@ -1,0 +1,13 @@
+.avatar {
+  border: 1px solid #c3c3c3;
+  border-radius: 50%;
+}
+
+.avatarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background-color: var(--avatarBackgroundColor);
+}

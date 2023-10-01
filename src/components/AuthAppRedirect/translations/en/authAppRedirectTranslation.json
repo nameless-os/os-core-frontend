@@ -1,0 +1,6 @@
+{
+  "authRedirect": {
+    "pleaseLogin": "Please log in to use this app",
+    "goToLogin": "Go to login page"
+  }
+}

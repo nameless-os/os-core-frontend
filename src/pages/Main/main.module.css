@@ -1,0 +1,7 @@
+.container {
+  height: 100vh;
+  padding: 30px 0 40px;
+
+  background-color: aliceblue;
+  background-size: cover;
+}

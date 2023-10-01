@@ -1,0 +1,14 @@
+{
+  "mines": "мин",
+  "Available": "Доступно",
+  "Change difficulty": "Изменить сложность",
+  "Restart": "Заново",
+  "You lose!": "Вы проиграли!",
+  "You win!": "Вы выйграли!",
+  "difficulties": {
+    "Easy": "Легко",
+    "Normal": "Нормально",
+    "Hard": "Сложно",
+    "Extreme": "Экстрим"
+  }
+}
