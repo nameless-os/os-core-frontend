@@ -1,11 +1,8 @@
-// Libraries
 import { FC } from 'react';
 
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Message } from '@Interfaces/message.interface';
 
-// Styles
 import styles from './messageAlertItem.module.css';
 
 interface Props extends ChildrenNever {

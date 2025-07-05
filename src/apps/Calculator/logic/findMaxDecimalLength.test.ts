@@ -1,4 +1,3 @@
-// Logic
 import { findMaxDecimalLength } from './findMaxDecimalLength';
 
 describe('calculator findMaxDecimalLength', () => {

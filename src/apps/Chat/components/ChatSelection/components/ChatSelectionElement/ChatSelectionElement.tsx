@@ -1,14 +1,9 @@
-// Libraries
 import { FC } from 'react';
 
-// Interface
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Message } from '@Interfaces/message.interface';
-
-// Components
 import { Avatar } from '@Components/Avatar/Avatar';
 
-// Styles
 import styles from './chatSelectionElement.module.css';
 
 interface Props extends ChildrenNever {
@@ -21,15 +16,16 @@ interface Props extends ChildrenNever {
   changeChat: (chatId: number) => void;
 }
 
-const ChatSelectionElement: FC<Props> = (
-  { name, lastMessage, countOfNewMessages, lastVisitDate, avatarLink, userId, changeChat }: Props,
-) => (
-  <div
-    className={styles.wrapper}
-    onClick={() => changeChat(userId)}
-    role="button"
-    tabIndex={0}
-  >
+const ChatSelectionElement: FC<Props> = ({
+  name,
+  lastMessage,
+  countOfNewMessages,
+  lastVisitDate,
+  avatarLink,
+  userId,
+  changeChat,
+}: Props) => (
+  <div className={styles.wrapper} onClick={() => changeChat(userId)} role="button" tabIndex={0}>
     <div className={styles.newMessage}>
       <div className={styles.nameAndMsg}>
         <div>
@@ -54,7 +50,7 @@ const ChatSelectionElement: FC<Props> = (
       </div>
       <div className={styles.avatar}>
         <Avatar link={avatarLink} name={name} />
-        {countOfNewMessages > 0 && (<span className={styles.count}>{`+${countOfNewMessages}`}</span>)}
+        {countOfNewMessages > 0 && <span className={styles.count}>{`+${countOfNewMessages}`}</span>}
       </div>
     </>
   </div>

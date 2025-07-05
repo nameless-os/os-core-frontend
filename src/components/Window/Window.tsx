@@ -1,43 +1,26 @@
-// Libraries
 import React, { FC, ReactNode, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Resizable } from 're-resizable';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowRestore, faTimes, faWindowMinimize } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faWindowMinimize, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 
-// Redux
-import { setWindowActive, setWindowPosition } from 'src/redux/slices/appsSlice/appsSlice';
-
-// Enums
-import { App } from '@Enums/app.enum';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Hooks
-import { useDragNDrop } from '@Hooks/useDragNDrop/useDragNDrop';
-import { useApp } from '@Hooks/useApp/useApp';
-
-// Components
+import { getPxFromRem, AppState, App } from '@webos-project/common';
+import { getAppById, setWindowActive, setWindowPosition } from 'src/redux/slices/appsSlice/apps.slice';
 import { Button } from '@Components/Button/Button';
+import { useApp, useDragNDrop, useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Utils
-import { getPxFromRem } from '@Utils/getPxFromRem';
-
-// Styles
 import styles from './window.module.css';
 
 interface Props {
   children?: ReactNode;
   type: App;
+  appId: string;
 }
 
-export const Window: FC<Props> = ({ children, type }: Props) => {
-  const windowPosition = useSelector((state: RootState) => state.apps.appsState[type].windowPosition);
-  const isOpen = useSelector((state: RootState) => state.apps.appsState[type].isOpen);
-  const isCollapsed = useSelector((state: RootState) => state.apps.appsState[type].isCollapsed);
+export const Window: FC<Props> = ({ children, type, appId }: Props) => {
+  const windowPosition = useTypedSelector((state) => getAppById(state, appId)!.windowPosition);
+  const isCollapsed = useTypedSelector((state) => getAppById(state, appId)?.state === AppState.Collapsed);
 
   const [width, setWidth] = useState(getPxFromRem(48));
   const [height, setHeight] = useState(getPxFromRem(27));
@@ -45,11 +28,11 @@ export const Window: FC<Props> = ({ children, type }: Props) => {
   const windowTop = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { startDrag, newCoords, isDrag } = useDragNDrop(setWindowPosition, windowTop, windowPosition, type);
+  const { startDrag, newCoords, isDrag } = useDragNDrop(setWindowPosition, windowTop, windowPosition, type, appId);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
   const { t } = useTranslation();
-  const { appIndex, handleClose, handleToggleCollapse } = useApp(type);
+  const { handleClose, handleToggleCollapse, appIndex } = useApp(type, appId);
 
   function handleResize(newWidth: number, newHeight: number) {
     setWidth(newWidth);
@@ -57,7 +40,7 @@ export const Window: FC<Props> = ({ children, type }: Props) => {
   }
 
   function handleSetActive() {
-    dispatch(setWindowActive(type));
+    dispatch(setWindowActive(appId));
   }
 
   function returnToDefaultSize() {
@@ -104,7 +87,7 @@ export const Window: FC<Props> = ({ children, type }: Props) => {
 
   return (
     <AnimatePresence>
-      {isOpen && !isCollapsed && (
+      {!isCollapsed && (
         <motion.div
           className={styles.window}
           style={{ top: newCoords?.top, left: newCoords?.left, zIndex: 100 - appIndex }}

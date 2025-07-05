@@ -1,48 +1,33 @@
-// Libraries
 import React, { FC, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-// Enums
-import { App } from '@Enums/app.enum';
+import { CommonAppProps, App } from '@webos-project/common';
 
-// Redux
 import { closeToDoAddError, closeToDoUpdateError, getToDoItems } from '@ToDo/redux/toDoSlice/toDoSlice';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Interfaces
-import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Utils
-import { isLoggedIn } from '@Utils/isLoggedIn';
-
-// Assets
-import imgSource from '@Icons/toDo.svg';
-
-// Components
 import { Window } from '@Components/Window/Window';
-import { Icon } from '@Components/Icon/Icon';
 import { ToDoList } from '@ToDo/components/ToDoList/ToDoList';
 import { ToDoInput } from '@ToDo/components/ToDoInput/ToDoInput';
 import { ToDoItemDetails } from '@ToDo/components/ToDoItemDetails/ToDoItemDetails';
 import { TopWindowError } from '@Components/TopWindowError/TopWindowError';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './toDo.module.css';
 
-const ToDo: FC<ChildrenNever> = () => {
-  const activeToDoPage = useSelector((state: RootState) => state.toDo.activeToDoPage);
-  const addError = useSelector((state: RootState) => state.toDo.addError);
-  const updateError = useSelector((state: RootState) => state.toDo.updateError);
+function isLoggedIn() {
+  return false;
+}
 
-  const dispatch = useDispatch();
+const ToDo: FC<CommonAppProps> = ({ appId }) => {
+  const activeToDoPage = useTypedSelector((state) => state.toDo.activeToDoPage);
+  const addError = useTypedSelector((state) => state.toDo.addError);
+  const updateError = useTypedSelector((state) => state.toDo.updateError);
+
+  const dispatch = useTypedDispatch();
 
   useEffect(() => {
     if (!isLoggedIn()) {
       return;
     }
-    dispatch(getToDoItems());
+    dispatch(getToDoItems() as any);
   }, []);
 
   function closeErrors() {
@@ -52,10 +37,11 @@ const ToDo: FC<ChildrenNever> = () => {
 
   return (
     <>
-      <Icon imgSource={imgSource} type={App.ToDo} />
-      <Window type={App.ToDo}>
+      <Window type={App.ToDo} appId={appId}>
         <div className={styles.container}>
-          {activeToDoPage !== '' ? <ToDoItemDetails id={activeToDoPage} /> : (
+          {activeToDoPage !== '' ? (
+            <ToDoItemDetails id={activeToDoPage} />
+          ) : (
             <>
               <TopWindowError handleClick={closeErrors} error={updateError || addError} />
               <ToDoList />

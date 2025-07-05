@@ -1,21 +1,11 @@
-// Libraries
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
 
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { User } from '@Interfaces/user.interface';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Logic
 import { getReadableLastVisitDate } from '@Apps/Chat/logic/dateProcess';
-
-// Components
 import { Avatar } from '@Components/Avatar/Avatar';
+import { useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './currentChatUserData.module.css';
 
 interface Props extends ChildrenNever {
@@ -23,7 +13,7 @@ interface Props extends ChildrenNever {
 }
 
 const CurrentChatUserData: FC<Props> = ({ user }: Props) => {
-  const language = useSelector((state: RootState) => state.language.language);
+  const language = useTypedSelector((state) => state.settings.language);
 
   return (
     <div className={styles.container}>

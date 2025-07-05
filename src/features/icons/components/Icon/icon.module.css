@@ -1,0 +1,46 @@
+.img {
+  position: relative;
+
+  width: 2rem;
+  height: 2rem;
+  padding: 0.1rem;
+
+  border-radius: 0.2rem;
+  background: #fff;
+}
+
+.container {
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 4rem;
+
+  user-select: none;
+
+  color: #fff;
+  text-shadow: 1px 1px #000;
+}
+
+.title {
+  position: relative;
+
+  text-align: center;
+
+  font-size: 0.75rem;
+}
+
+.imgContainer {
+  position: relative;
+
+  width: 2rem;
+
+  background: transparent;
+}
+
+.grabbed {
+  cursor: grabbing !important;
+}

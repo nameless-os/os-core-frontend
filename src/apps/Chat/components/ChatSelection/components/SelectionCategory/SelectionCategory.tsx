@@ -1,27 +1,22 @@
-// Libraries
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleUp, faAngleDown, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { User } from '@Interfaces/user.interface';
 import { Room } from '@Apps/Chat/interfaces/room';
-
-// Components
 import { Button } from '@Components/Button/Button';
+
 import { UserSelectionItems } from '../UserSelectionItems/UserSelectionItems';
 import { RoomSelectionItems } from '../RoomSelectionItems/RoomSelectionItems';
-
-// Styles
 import styles from './selectionCategory.module.css';
 
 interface Props extends ChildrenNever {
-  items: User[] | Room[],
-  itemsType: string,
-  categoryName: string,
+  items: User[] | Room[];
+  itemsType: string;
+  categoryName: string;
 }
 
 const SelectionCategory: FC<Props> = ({ items, itemsType, categoryName }: Props) => {
@@ -54,7 +49,7 @@ const SelectionCategory: FC<Props> = ({ items, itemsType, categoryName }: Props)
       <div className={styles.category}>
         <p className={styles.categoryName}>{t(categoryName)}</p>
         <Button onClick={handleToggleCollapse} className={styles.toggleCollapseButton}>
-          {!isCollapsed ? (<FontAwesomeIcon icon={faAngleUp} />) : (<FontAwesomeIcon icon={faAngleDown} />)}
+          {!isCollapsed ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
         </Button>
       </div>
       <div className={styles.findContainer}>
@@ -74,11 +69,11 @@ const SelectionCategory: FC<Props> = ({ items, itemsType, categoryName }: Props)
             }}
             transition={{ duration: 0.5 }}
           >
-            {
-              itemsType === 'User' ?
-                (<UserSelectionItems users={visibleItems as User[]} />)
-                : (<RoomSelectionItems rooms={visibleItems as Room[]} />)
-            }
+            {itemsType === 'User' ? (
+              <UserSelectionItems users={visibleItems as User[]} />
+            ) : (
+              <RoomSelectionItems rooms={visibleItems as Room[]} />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

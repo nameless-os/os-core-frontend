@@ -1,14 +1,9 @@
-// Libraries
 import { createSlice } from '@reduxjs/toolkit';
 
-// Enums
-import { Difficulty } from '@Enums/difficulty.enum';
 import { SimonStatus } from '@Simon/enums/simonStatus.enum';
-
-// Logic
 import { generatePattern, regeneratePattern, updatePattern } from 'src/apps/Simon/logic';
+import { SimonDifficulty as Difficulty } from '@Simon/enums/simonDifficulty.enum';
 
-// Assets
 import simonSuccessSound from 'src/assets/sounds/simon/simonSuccess.wav';
 import simonLoseSound from 'src/assets/sounds/simon/simonLoseSound.wav';
 
@@ -44,14 +39,14 @@ const simonSlice = createSlice({
     },
     startShowing(state) {
       if (state.level === 1) {
-        if (state.difficulty === Difficulty.Easy || state.difficulty === Difficulty.Normal) {
+        if (state.difficulty === Difficulty.Easy || state.difficulty === Difficulty.Medium) {
           state.pattern = generatePattern(4);
         } else {
           state.pattern = generatePattern(9);
         }
       } else if (state.difficulty === Difficulty.Easy) {
         state.pattern = updatePattern(state.pattern, 4);
-      } else if (state.difficulty === Difficulty.Normal) {
+      } else if (state.difficulty === Difficulty.Medium) {
         state.pattern = regeneratePattern(3 + (state.level - 1), 4);
       } else if (state.difficulty === Difficulty.Hard) {
         state.pattern = updatePattern(state.pattern, 9);
@@ -84,10 +79,4 @@ const simonSlice = createSlice({
 });
 
 export default simonSlice.reducer;
-export const {
-  changeDifficulty,
-  updateStatus,
-  startShowing,
-  simonClick,
-  restartGame,
-} = simonSlice.actions;
+export const { changeDifficulty, updateStatus, startShowing, simonClick, restartGame } = simonSlice.actions;

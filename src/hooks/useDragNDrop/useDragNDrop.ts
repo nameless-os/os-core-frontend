@@ -1,24 +1,20 @@
-// Libraries
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import React, { RefObject, useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-// Utils
-import { getPxFromRem } from 'src/utils/getPxFromRem';
+import { getPxFromRem, App, Position } from '@webos-project/common';
+import { useTypedDispatch } from '@Hooks';
 
-// Enums
-import { App } from '@Enums/app.enum';
-
-// Types
-import { Coordinates } from '@Interfaces/coordinates.interface';
-
-// Redux
-import { setWindowActive } from 'src/redux/slices/appsSlice/appsSlice';
+import { setWindowActive } from 'src/redux/slices/appsSlice/apps.slice';
 
 const useDragNDrop = (
   changeCoordinates: ActionCreatorWithPayload<{
-    type: App, coordinates: Coordinates
-  }>, element: RefObject<HTMLDivElement>, coords: Coordinates, type: App,
+    appId: string;
+    newPosition: Position;
+  }>,
+  element: RefObject<HTMLDivElement>,
+  coords: Position,
+  type: App,
+  appId: string,
 ) => {
   const [topCoordinatesLocal, setTopCoordinatesLocal] = useState(coords.top);
   const [leftCoordinatesLocal, setLeftCoordinatesLocal] = useState(coords.left);
@@ -26,7 +22,7 @@ const useDragNDrop = (
   const [shiftTop, setShiftTop] = useState(0);
   const [isDrag, setIsDrag] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
   const drag = useCallback(
     (event: MouseEvent) => {
@@ -53,8 +49,8 @@ const useDragNDrop = (
         left = rightLimit;
       }
 
-      setTopCoordinatesLocal(`${top / getPxFromRem(1)}rem`);
-      setLeftCoordinatesLocal(`${left / getPxFromRem(1)}rem`);
+      setTopCoordinatesLocal(top);
+      setLeftCoordinatesLocal(left);
     },
     [element, shiftLeft, shiftTop],
   );
@@ -62,8 +58,8 @@ const useDragNDrop = (
   const stopDrag = useCallback(() => {
     dispatch(
       changeCoordinates({
-        type,
-        coordinates: {
+        appId,
+        newPosition: {
           top: topCoordinatesLocal,
           left: leftCoordinatesLocal,
         },
@@ -76,7 +72,7 @@ const useDragNDrop = (
 
   const startDrag = (event: React.MouseEvent) => {
     event.preventDefault();
-    dispatch(setWindowActive(type));
+    dispatch(setWindowActive(appId));
     setShiftLeft(event.clientX - element.current!.getBoundingClientRect().x);
     setShiftTop(event.clientY - element.current!.getBoundingClientRect().y);
     setIsDrag(true);
@@ -88,7 +84,7 @@ const useDragNDrop = (
     document.addEventListener('mouseup', stopDrag);
   }, [isDrag, drag, stopDrag]);
 
-  const newCoords: Coordinates = {
+  const newCoords: Position = {
     top: topCoordinatesLocal,
     left: leftCoordinatesLocal,
   };

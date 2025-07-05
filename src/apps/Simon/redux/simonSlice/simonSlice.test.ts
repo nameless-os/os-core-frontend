@@ -1,19 +1,15 @@
-// Enums
-import { Difficulty } from '@Enums/difficulty.enum';
+import { SimonDifficulty as Difficulty } from '../../enums/simonDifficulty.enum';
 import { SimonStatus } from '@Simon/enums/simonStatus.enum';
-
-// Logic
 import * as simonLogic from '@Simon/logic';
-
-// Redux
 import store from 'src/redux/store';
+
 import { changeDifficulty, restartGame, startShowing, updateStatus } from './simonSlice';
 
 describe('simon slice', () => {
   it('should change difficulty then calls changeDifficulty', () => {
-    store.dispatch(changeDifficulty({ difficulty: Difficulty.Normal }));
+    store.dispatch(changeDifficulty({ difficulty: Difficulty.Medium }));
 
-    expect(store.getState().simon.difficulty).toEqual(Difficulty.Normal);
+    expect(store.getState().simon.difficulty).toEqual(Difficulty.Medium);
     expect(store.getState().simon.level).toEqual(1);
     expect(store.getState().simon.move).toEqual(1);
     expect(store.getState().simon.simonStatus).toEqual(SimonStatus.Waiting);
@@ -42,7 +38,7 @@ describe('simon slice', () => {
     });
 
     it('should generate pattern then calls with difficulty normal', () => {
-      store.dispatch(changeDifficulty({ difficulty: Difficulty.Normal }));
+      store.dispatch(changeDifficulty({ difficulty: Difficulty.Medium }));
       store.dispatch(startShowing());
 
       expect(simonLogic.generatePattern).toBeCalledTimes(1);

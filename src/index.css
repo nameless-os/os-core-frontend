@@ -11,11 +11,11 @@
 }
 
 :root {
-  --topBarHeight: 4vh;
-  --bottomPartHeight: 4vh;
+  --topBarHeight: 30px;
+  --bottomPartHeight: 40px;
   --boxShadow6: 6px 3px 6px #000;
 
-  font-size: 2vh;
+  font-size: 14px;
 }
 
 .darkTheme {

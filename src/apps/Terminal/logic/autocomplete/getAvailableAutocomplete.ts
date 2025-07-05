@@ -1,25 +1,26 @@
-// Redux
 import store from 'src/redux/store';
 import { setAvailableAutocomplete } from '@Terminal/redux/terminalSlice/terminalSlice';
+import { TerminalCommand } from '@Terminal/enums/terminalCommand.enum';
 
-function setCommandsWithCurrentLevel(commands: string[], text: string): void {
+function setCommandsWithCurrentLevel(commands: string[], text: string, appId: string): void {
   const textArr = text.split(' ');
   const isAlreadyCommand = text[text.length - 1] === ' ' || commands.includes(textArr[textArr.length - 1]);
 
   if (isAlreadyCommand) {
-    store.dispatch(setAvailableAutocomplete(commands));
+    store.dispatch(setAvailableAutocomplete({ autocomplete: commands, appId }));
     return;
   }
 
   const availableCommands = commands.filter((command) => command.startsWith(textArr[textArr.length - 1]));
-  store.dispatch(setAvailableAutocomplete(availableCommands));
+  store.dispatch(setAvailableAutocomplete({ autocomplete: availableCommands, appId }));
 }
 
-function getAvailableAutocomplete(text: string) {
-  const { autocompleteNumber } = store.getState().terminal;
+function getAvailableAutocomplete(text: string, appId: string) {
+  const terminalData = store.getState().terminal.terminalsData.find((el) => el.appId === appId)!;
+  const { autocompleteNumber } = terminalData;
 
   if (autocompleteNumber) {
-    const { availableAutocomplete } = store.getState().terminal;
+    const { availableAutocomplete } = terminalData;
 
     if (!availableAutocomplete) {
       return text.split(' ')[text.split(' ').length - 1];
@@ -33,32 +34,32 @@ function getAvailableAutocomplete(text: string) {
   let currentLevelCommands: string[] = [];
 
   if (currentLevel === 0) {
-    currentLevelCommands = store.getState().terminal.commands.firstLevelCommands;
+    currentLevelCommands = terminalData.commands.firstLevelCommands;
   }
 
   if (currentLevel === 1) {
-    if (textArr[0] === 'change') {
-      currentLevelCommands = store.getState().terminal.commands.changeCommands;
-    } else if (textArr[0] === 'open') {
-      currentLevelCommands = store.getState().terminal.commands.openCommands;
+    if (textArr[0] === TerminalCommand.Change) {
+      currentLevelCommands = terminalData.commands.changeCommands;
+    } else if (textArr[0] === TerminalCommand.Open) {
+      currentLevelCommands = terminalData.commands.openCommands;
     } else {
       currentLevelCommands = [];
     }
   }
 
-  if (currentLevel === 2 && textArr[0] === 'change') {
+  if (currentLevel === 2 && textArr[0] === TerminalCommand.Change) {
     if (textArr[1] === 'language') {
-      currentLevelCommands = store.getState().terminal.commands.changeLanguageCommands;
+      currentLevelCommands = terminalData.commands.changeLanguageCommands;
     } else if (textArr[1] === 'theme') {
-      currentLevelCommands = store.getState().terminal.commands.changeBackgroundImageCommands;
+      currentLevelCommands = terminalData.commands.changeBackgroundImageCommands;
     } else {
       currentLevelCommands = [];
     }
   }
 
-  setCommandsWithCurrentLevel(currentLevelCommands, text);
+  setCommandsWithCurrentLevel(currentLevelCommands, text, appId);
 
-  const { availableAutocomplete } = store.getState().terminal;
+  const { availableAutocomplete } = terminalData;
 
   if (availableAutocomplete.length < 1) {
     return text.split(' ')[text.split(' ').length - 1];

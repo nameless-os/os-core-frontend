@@ -1,35 +1,29 @@
-// Libraries
 import classNames from 'classnames';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Utils
-import { isLoggedIn } from '@Utils/isLoggedIn';
-
-// Redux
 import { addToDoItem, addToDoItemLocal } from '@ToDo/redux/toDoSlice/toDoSlice';
-
-// Components
 import { Button } from '@Components/Button/Button';
+import { useTypedDispatch } from '@Hooks';
 
-// Styles
 import styles from './ToDoInput.module.css';
 
+function isLoggedIn() {
+  return false;
+}
+
 const ToDoInput: FC<ChildrenNever> = React.memo(() => {
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
   const { t } = useTranslation('toDo');
   const { register, getValues, handleSubmit, formState, reset, setFocus } = useForm();
 
   function handleAddToDo() {
     if (isLoggedIn()) {
-      dispatch(addToDoItem(getValues('addToDo')));
+      dispatch(addToDoItem(getValues('addToDo')) as any);
       return reset();
     }
     dispatch(addToDoItemLocal(getValues('addToDo')));

@@ -1,4 +1,3 @@
-// Logic
 import { processAddAndSubtract } from './processAddAndSubtract';
 
 describe('calculator processAddAndSubstract', () => {

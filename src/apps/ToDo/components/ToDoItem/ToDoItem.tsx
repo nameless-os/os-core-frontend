@@ -1,46 +1,40 @@
-// Libraries
-import { isLoggedIn } from '@Utils/isLoggedIn';
 import React, { FC, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
-// Redux
 import {
   deleteToDoItem,
   changeActiveToDoPage,
   updateToDoItem,
-  deleteToDoItemLocal, updateToDoItemLocal,
+  deleteToDoItemLocal,
+  updateToDoItemLocal,
 } from '@ToDo/redux/toDoSlice/toDoSlice';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Components
 import { Button } from '@Components/Button/Button';
-
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './toDoItem.module.css';
 
 interface Props extends ChildrenNever {
   id: string;
 }
 
+function isLoggedIn() {
+  return false;
+}
+
 const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
-  const toDoItem = useSelector(
-    (state: RootState) => state.toDo.toDoList[state.toDo.toDoList.findIndex((el) => el.id === id)],
+  const toDoItem = useTypedSelector(
+    (state) => state.toDo.toDoList[state.toDo.toDoList.findIndex((el) => el.id === id)],
   );
 
   const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
 
   const { t } = useTranslation('toDo');
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
   function handleChangeActiveToDoPage() {
     dispatch(changeActiveToDoPage(id));
@@ -52,7 +46,7 @@ const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
 
   function handleDeleteItem() {
     if (isLoggedIn()) {
-      dispatch(deleteToDoItem(id));
+      dispatch(deleteToDoItem(id) as any);
     } else {
       dispatch(deleteToDoItemLocal(id));
     }
@@ -60,25 +54,25 @@ const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
 
   function handleToggleToDoItem() {
     if (isLoggedIn()) {
-      dispatch(updateToDoItem({
-        ...toDoItem,
-        isComplete: !toDoItem.isComplete,
-      }));
+      dispatch(
+        updateToDoItem({
+          ...toDoItem,
+          isComplete: !toDoItem.isComplete,
+        }) as any,
+      );
     } else {
-      dispatch(updateToDoItemLocal({
-        ...toDoItem,
-        isComplete: !toDoItem.isComplete,
-      }));
+      dispatch(
+        updateToDoItemLocal({
+          ...toDoItem,
+          isComplete: !toDoItem.isComplete,
+        }),
+      );
     }
   }
 
   return (
     <li className={styles.toDoItem} data-cy="todo-item">
-      <motion.div
-        className={styles.text}
-        initial={{ y: 50, opacity: 0.2 }}
-        animate={{ y: 0, opacity: 1 }}
-      >
+      <motion.div className={styles.text} initial={{ y: 50, opacity: 0.2 }} animate={{ y: 0, opacity: 1 }}>
         <Button
           onClick={handleChangeActiveToDoPage}
           className={classNames(styles.textButton, {

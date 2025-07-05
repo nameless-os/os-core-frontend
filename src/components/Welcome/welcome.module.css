@@ -33,8 +33,9 @@
 }
 
 .enter {
-  min-width: 15rem;
+  min-width: 300px;
   padding: 0.5rem;
+  background: rgba(40, 40, 40, 0.4);
 }
 
 .goToLogin {

@@ -1,31 +1,16 @@
-// Libraries
 import React, { FC, ReactNode } from 'react';
-import { useSelector } from 'react-redux';
 
-// Assets
-import imgSource from 'src/assets/images/icons/chat.svg';
-
-// Enums
-import { App } from '@Enums/app.enum';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Interface
-import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Components
-import { Icon } from '@Components/Icon/Icon';
+import { App, CommonAppProps } from '@webos-project/common';
+import { useTypedSelector } from '@Hooks';
 import { Window } from '@Components/Window/Window';
 import { ChatSelection } from '@Chat/components/ChatSelection/ChatSelection';
 import { AuthAppRedirect } from '@Components/AuthAppRedirect/AuthAppRedirect';
 import { ChatMainContent } from '@Chat/components/ChatMainContent/ChatMainContent';
 
-// Styles
 import styles from './chat.module.css';
 
-export const Chat: FC<ChildrenNever> = React.memo(() => {
-  const username = useSelector((state: RootState) => state.user.currentUser.username);
+const ChatComponent: FC<CommonAppProps> = ({ appId }) => {
+  const username = useTypedSelector((state) => state.user.currentUser.username);
 
   let mainComponent: ReactNode;
 
@@ -42,10 +27,13 @@ export const Chat: FC<ChildrenNever> = React.memo(() => {
 
   return (
     <>
-      <Icon imgSource={imgSource} type={App.Chat} />
-      <Window type={App.Chat}>
+      <Window type={App.Chat} appId={appId}>
         {mainComponent}
       </Window>
     </>
   );
-});
+}
+
+const Chat = React.memo(ChatComponent);
+
+export { Chat };

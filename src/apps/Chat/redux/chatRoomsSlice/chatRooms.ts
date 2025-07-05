@@ -1,8 +1,6 @@
-// Libraries
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Interfaces
 import store from 'src/redux/store';
 import { BaseFetchResult } from '@Interfaces/baseFetchResult';
 import { Room } from '@Chat/interfaces/room';
@@ -16,21 +14,25 @@ const fetchRooms = createAsyncThunk('users/fetchRooms', async () => {
   return response.data;
 });
 
-const addRoom = createAsyncThunk('users/addRoom', async (payload: { name: string, image: string }) => {
-  await axios.post(`${process.env.REACT_APP_API_URL}/room/rooms`, {
-    usersIds: store.getState().chatRooms.newRoomUsers,
-    name: payload.name,
-    image: payload.image,
-  }, {
-    timeout: 30000,
-    withCredentials: true,
-  });
+const addRoom = createAsyncThunk('users/addRoom', async (payload: { name: string; image: string }) => {
+  await axios.post(
+    `${process.env.REACT_APP_API_URL}/room/rooms`,
+    {
+      usersIds: store.getState().chatRooms.newRoomUsers,
+      name: payload.name,
+      image: payload.image,
+    },
+    {
+      timeout: 30000,
+      withCredentials: true,
+    },
+  );
 });
 
 interface InitialState extends BaseFetchResult {
-  newRoomUsers: number[],
-  isAddRoomFormOpen: boolean,
-  rooms: Room[],
+  newRoomUsers: number[];
+  isAddRoomFormOpen: boolean;
+  rooms: Room[];
 }
 
 const initialState: InitialState = {

@@ -1,39 +1,34 @@
-// Libraries
-import { isLoggedIn } from '@Utils/isLoggedIn';
-import { useDispatch, useSelector } from 'react-redux';
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Redux
 import {
   changeActiveToDoPage,
   closeToDoUpdateError,
   updateToDoItem,
   updateToDoItemLocal,
 } from '@ToDo/redux/toDoSlice/toDoSlice';
-
-// Components
 import { TopWindowError } from '@Components/TopWindowError/TopWindowError';
 import { Button } from '@Components/Button/Button';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './ToDoItemDetails.module.css';
 
 interface Props extends ChildrenNever {
   id: string;
 }
 
+function isLoggedIn() {
+  return false;
+}
+
 const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
-  const toDoItem = useSelector((state: RootState) => state.toDo.toDoList[state.toDo.toDoList.findIndex((el) => el.id === id)]);
-  const isUpdateLoading = useSelector((state: RootState) => state.toDo.isUpdateLoading);
-  const updateError = useSelector((state: RootState) => state.toDo.updateError);
+  const toDoItem = useTypedSelector(
+    (state) => state.toDo.toDoList[state.toDo.toDoList.findIndex((el) => el.id === id)],
+  );
+  const isUpdateLoading = useTypedSelector((state) => state.toDo.isUpdateLoading);
+  const updateError = useTypedSelector((state) => state.toDo.updateError);
 
   const [text, setText] = useState(toDoItem.heading);
   const [description, setDescription] = useState(toDoItem.description);
@@ -42,7 +37,7 @@ const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
 
   const nameRef = useRef<HTMLInputElement>(null);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
   const { t } = useTranslation('toDo');
 
   // Add useEffect because focus in setIsEditableToTrue don't work on first click
@@ -85,13 +80,23 @@ const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
 
   function handleSave() {
     if (isLoggedIn()) {
-      dispatch(updateToDoItem({
-        id, description, heading: text, isComplete,
-      }));
+      dispatch(
+        updateToDoItem({
+          id,
+          description,
+          heading: text,
+          isComplete,
+        }) as any,
+      );
     } else {
-      dispatch(updateToDoItemLocal({
-        id, description, heading: text, isComplete,
-      }));
+      dispatch(
+        updateToDoItemLocal({
+          id,
+          description,
+          heading: text,
+          isComplete,
+        }),
+      );
     }
     setIsEditable(false);
   }
@@ -137,21 +142,24 @@ const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
           )}
         </label>
         <div className={styles.buttons}>
-          {!isEditable ?
-            (<Button onClick={handleBack} className={styles.bottomBtn} aria-label={t('back')}>
+          {!isEditable ? (
+            <Button onClick={handleBack} className={styles.bottomBtn} aria-label={t('back')}>
               {t('back')}
-            </Button>)
-            : <Button onClick={handleCancel} className={styles.bottomBtn} aria-label={t('cancel')}>
+            </Button>
+          ) : (
+            <Button onClick={handleCancel} className={styles.bottomBtn} aria-label={t('cancel')}>
               {t('cancel')}
             </Button>
-          }
-          {!isEditable ?
+          )}
+          {!isEditable ? (
             <Button onClick={setIsEditableToTrue} className={styles.bottomBtn} aria-label={t('edit')}>
               {t('edit')}
             </Button>
-            : <Button className={styles.bottomBtn} onClick={handleSave} disabled={isUpdateLoading} aria-label={t('save')}>
+          ) : (
+            <Button className={styles.bottomBtn} onClick={handleSave} disabled={isUpdateLoading} aria-label={t('save')}>
               {t('save')}
-            </Button>}
+            </Button>
+          )}
         </div>
       </form>
     </>

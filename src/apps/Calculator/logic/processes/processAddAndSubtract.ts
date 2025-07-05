@@ -1,4 +1,3 @@
-// Logic
 import { findFirstOperatorIndex } from '../findFirstOperatorIndex';
 import { findMaxDecimalLength } from '../findMaxDecimalLength';
 
@@ -17,19 +16,17 @@ function processAddAndSubtract(numbers: number[], operators: string[]): [number[
     if (operatorsCopy.indexOf('+') === index) {
       if (decimalLength) {
         numbersCopy[index] =
-          (
-            Math.round(numbersCopy[index] * 10 ** decimalLength)
-            + Math.round(numbersCopy[index + 1] * 10 ** decimalLength)
-          ) / 10 ** decimalLength;
+          (Math.round(numbersCopy[index] * 10 ** decimalLength) +
+            Math.round(numbersCopy[index + 1] * 10 ** decimalLength)) /
+          10 ** decimalLength;
       } else {
         numbersCopy[index] += numbersCopy[index + 1];
       }
     } else if (decimalLength) {
       numbersCopy[index] =
-        (
-          Math.round(numbersCopy[index] * 10 ** decimalLength)
-          - Math.round(numbersCopy[index + 1] * 10 ** decimalLength)
-        ) / 10 ** decimalLength;
+        (Math.round(numbersCopy[index] * 10 ** decimalLength) -
+          Math.round(numbersCopy[index + 1] * 10 ** decimalLength)) /
+        10 ** decimalLength;
     } else {
       numbersCopy[index] -= numbersCopy[index + 1];
     }

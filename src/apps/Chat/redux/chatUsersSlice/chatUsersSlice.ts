@@ -1,8 +1,6 @@
-// Libraries
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// interfaces
 import { BaseFetchResult } from '@Interfaces/baseFetchResult';
 import { User } from '@Interfaces/user.interface';
 import { Message } from '@Interfaces/message.interface';
@@ -16,7 +14,7 @@ const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
 });
 
 interface InitialState extends BaseFetchResult {
-  users: User[],
+  users: User[];
 }
 
 const initialState: InitialState = {
@@ -61,10 +59,6 @@ const chatUsersSlice = createSlice({
 
 export default chatUsersSlice.reducer;
 
-export const {
-  changeNewMessageCountToZero,
-  incrementNewMessageCount,
-  changeLastUserMessage,
-} = chatUsersSlice.actions;
+export const { changeNewMessageCountToZero, incrementNewMessageCount, changeLastUserMessage } = chatUsersSlice.actions;
 
 export { fetchUsers };

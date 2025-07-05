@@ -1,9 +1,7 @@
-// Libraries
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
-// Interfaces
 import { ToDoItem } from '@ToDo/interfaces/toDo.interface';
 
 interface InitialState {
@@ -20,7 +18,7 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-  toDoList: localStorage.getItem('toDoList') && JSON.parse(localStorage.getItem('toDoList')!) || [],
+  toDoList: (localStorage.getItem('toDoList') && JSON.parse(localStorage.getItem('toDoList')!)) || [],
   activeToDoPage: '',
   isToDoListLoading: false,
   toDoListError: '',
@@ -33,12 +31,16 @@ const initialState: InitialState = {
 };
 
 const addToDoItem = createAsyncThunk('toDo/addToDoItem', async (payload: string, thunkApi) => {
-  const res = await axios.post(`${process.env.REACT_APP_API_URL}/toDo/items`, {
-    heading: payload,
-  }, {
-    withCredentials: true,
-    timeout: 30000,
-  });
+  const res = await axios.post(
+    `${process.env.REACT_APP_API_URL}/toDo/items`,
+    {
+      heading: payload,
+    },
+    {
+      withCredentials: true,
+      timeout: 30000,
+    },
+  );
 
   if (res.data.isSuccess) {
     return res.data;
@@ -69,13 +71,17 @@ const getToDoItems = createAsyncThunk('toDo/getToDoItems', async () => {
 });
 
 const updateToDoItem = createAsyncThunk('toDo/updateToDoItem', async (payload: ToDoItem, thunkApi) => {
-  const res = await axios.put(`${process.env.REACT_APP_API_URL}/toDo/items`, {
-    ...payload,
-    ...{ id: +payload.id },
-  }, {
-    withCredentials: true,
-    timeout: 30000,
-  });
+  const res = await axios.put(
+    `${process.env.REACT_APP_API_URL}/toDo/items`,
+    {
+      ...payload,
+      ...{ id: +payload.id },
+    },
+    {
+      withCredentials: true,
+      timeout: 30000,
+    },
+  );
 
   if (res.data.isSuccess) {
     return res.data;
@@ -121,7 +127,7 @@ const toDoSlice = createSlice({
       localStorage.setItem('toDoList', JSON.stringify(state.toDoList));
     },
   },
-  extraReducers: ((builder) => {
+  extraReducers: (builder) => {
     builder.addCase(addToDoItem.pending, (state) => {
       state.isAddLoading = true;
     });
@@ -174,7 +180,7 @@ const toDoSlice = createSlice({
       state.isUpdateLoading = false;
       state.updateError = 'Error';
     });
-  }),
+  },
 });
 
 export default toDoSlice.reducer;

@@ -1,15 +1,10 @@
-// Redux
 import { addTerminalHistory } from '@Terminal/redux/terminalSlice/terminalSlice';
-import { openApp } from 'src/redux/slices/appsSlice/appsSlice';
+import { openApp } from 'src/redux/slices/appsSlice/apps.slice';
 import store from 'src/redux/store';
-
-// I18n
 import i18n from '@Features/i18n';
+import { App } from '@webos-project/common';
 
-// Types
-import { App } from '@Enums/app.enum';
-
-const terminalProcessOpenCommand = (input: string) => {
+const terminalProcessOpenCommand = (input: string, appId: string) => {
   const { dispatch } = store;
 
   const firstWord = input.split(' ')[0];
@@ -20,26 +15,26 @@ const terminalProcessOpenCommand = (input: string) => {
   const app = arr.join('');
 
   if (Object.values(App).includes(app as App)) {
-    dispatch(addTerminalHistory(`${i18n.t('terminal:appOpen')}`));
-    dispatch(openApp(app as App));
+    dispatch(addTerminalHistory({ message: `${i18n.t('terminal:appOpen')}`, appId }));
+    dispatch(openApp({ type: app as App, appId }));
     return;
   }
 
   switch (firstWord) {
     case 'help':
     case '-h': {
-      dispatch(addTerminalHistory(`${i18n.t('terminal:openHelpInfo')}`));
-      dispatch(addTerminalHistory(`${i18n.t('terminal:availableApps')}: calculator, toDo, settings, chat, simon`));
+      dispatch(addTerminalHistory({ message: `${i18n.t('terminal:openHelpInfo')}`, appId }));
+      dispatch(addTerminalHistory({ message: `${i18n.t('terminal:availableApps')}: calculator, toDo, settings, chat, simon`, appId }));
       break;
     }
     case '': {
-      dispatch(addTerminalHistory(`${i18n.t('terminal:wrongCommand')}`));
-      dispatch(addTerminalHistory(`${i18n.t('terminal:openExample')}`));
+      dispatch(addTerminalHistory({ message: `${i18n.t('terminal:wrongCommand')}`, appId }));
+      dispatch(addTerminalHistory({ message: `${i18n.t('terminal:openExample')}`, appId }));
       break;
     }
     default: {
-      dispatch(addTerminalHistory(`${i18n.t('terminal:unknownApp')}`));
-      dispatch(addTerminalHistory(`${i18n.t('terminal:availableApps')}: calculator, toDo, settings, chat, simon`));
+      dispatch(addTerminalHistory({ message: `${i18n.t('terminal:unknownApp')}`, appId }));
+      dispatch(addTerminalHistory({ message: `${i18n.t('terminal:availableApps')}: calculator, toDo, settings, chat, simon`, appId }));
     }
   }
 };

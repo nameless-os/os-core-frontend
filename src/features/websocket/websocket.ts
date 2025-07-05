@@ -12,8 +12,14 @@ function initSocket() {
 
   socket.on('chatUpdate', (payload) => {
     processNewMessage(payload);
-    if ((payload.toUserId !== null && payload.owner.id === store.getState().chat.activeChat && store.getState().chat.activeType)
-      || (payload.toRoomId !== null && payload.owner.id === store.getState().chat.activeChat && store.getState().chat.activeType)) {
+    if (
+      (payload.toUserId !== null &&
+        payload.owner.id === store.getState().chat.activeChat &&
+        store.getState().chat.activeType) ||
+      (payload.toRoomId !== null &&
+        payload.owner.id === store.getState().chat.activeChat &&
+        store.getState().chat.activeType)
+    ) {
       store.dispatch(readMessages());
     }
   });

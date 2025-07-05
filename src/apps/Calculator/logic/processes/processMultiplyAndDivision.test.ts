@@ -1,4 +1,3 @@
-// Logic
 import { processMultiplyAndDivision } from './processMultiplyAndDivision';
 
 describe('calculator processMultiplyAndDivision', () => {

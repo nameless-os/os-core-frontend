@@ -1,25 +1,17 @@
-// Libraries
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
 
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
+import { useTypedSelector } from '@Hooks';
 
-// Components
 import { CurrentChatUserData } from './components/CurrentChatUserData/CurrentChatUserData';
 import { CurrentChatRoomData } from './components/CurrentChatRoomData/CurrentChatRoomData';
-
-// Styles
 import styles from './currentChatData.module.css';
 
 const CurrentChatData: FC<ChildrenNever> = React.memo(() => {
-  const users = useSelector((state: RootState) => state.chatUsers.users);
-  const rooms = useSelector((state: RootState) => state.chatRooms.rooms);
-  const activeChat = useSelector((state: RootState) => state.chat.activeChat);
-  const activeType = useSelector((state: RootState) => state.chat.activeType);
+  const users = useTypedSelector((state) => state.chatUsers.users);
+  const rooms = useTypedSelector((state) => state.chatRooms.rooms);
+  const activeChat = useTypedSelector((state) => state.chat.activeChat);
+  const activeType = useTypedSelector((state) => state.chat.activeType);
 
   if (activeChat === -1) {
     return <div className={styles.empty} />;

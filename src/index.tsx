@@ -1,23 +1,14 @@
-// Libraries
 import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-
-// Redux
 import store from 'src/redux/store';
-
-// Init
-import { initSetry } from './sentry.init';
-
-// Styles
 import './index.css';
-
-// Components
 import App from './App';
 
-initSetry();
+const container = document.getElementById('root');
+const root = createRoot(container!);
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <Suspense fallback="">
       <Provider store={store}>
@@ -25,5 +16,4 @@ ReactDOM.render(
       </Provider>
     </Suspense>
   </React.StrictMode>,
-  document.getElementById('root'),
 );

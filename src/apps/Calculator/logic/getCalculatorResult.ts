@@ -1,7 +1,5 @@
-// Utils
-import { deleteAllSpaces } from '@Utils/deleteAllSpaces';
+import { deleteAllSpaces } from '@webos-project/common';
 
-// Logic
 import { checkIsCalculatorInputCorrect } from './checkIsCalculatorInputCorrect';
 import { processPow } from './processes/processPow';
 import { processAddAndSubtract } from './processes/processAddAndSubtract';
@@ -29,6 +27,11 @@ function getCalcResult(inputValue: string): string {
     .split(/[0-9,.]+/)
     .filter((el) => el.length);
 
+
+  if (operators.length === 0) {
+    return 'OpErr';
+  }
+
   const [numbersAfterPowProcess, operatorsAfterPowProcess] = processPow(numbers, operators);
 
   const [numbersAfterMDProcess, operatorsAfterMDProcess] = processMultiplyAndDivision(
@@ -36,13 +39,11 @@ function getCalcResult(inputValue: string): string {
     operatorsAfterPowProcess,
   );
 
-  const [numbersAfterASProcess] = processAddAndSubtract(
-    numbersAfterMDProcess,
-    operatorsAfterMDProcess,
-  );
+  const [numbersAfterASProcess] = processAddAndSubtract(numbersAfterMDProcess, operatorsAfterMDProcess);
 
-  return typeof numbersAfterASProcess[0] === 'number'
-    && !Number.isNaN(numbersAfterASProcess[0]) ? numbersAfterASProcess[0].toString() : 'Error';
+  return typeof numbersAfterASProcess[0] === 'number' && !Number.isNaN(numbersAfterASProcess[0])
+    ? numbersAfterASProcess[0].toString()
+    : 'Error';
 }
 
 export { getCalcResult };

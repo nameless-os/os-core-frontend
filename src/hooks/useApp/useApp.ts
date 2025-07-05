@@ -1,66 +1,56 @@
-// Libraries
-import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
-// Redux
 import {
   setWindowActive,
   closeApp,
   openApp,
   toggleCollapseApp,
-} from 'src/redux/slices/appsSlice/appsSlice';
+} from 'src/redux/slices/appsSlice/apps.slice';
+import { App, AppState } from '@webos-project/common';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Enums
-import { App } from '@Enums/app.enum';
+const useApp = (type: App, appId?: string) => {
+  const currentAppsList = useTypedSelector((state) => state.apps.currentApps);
+  const isCollapsed = useTypedSelector((state) => state.apps.apps[appId!]?.state === AppState.Collapsed);
+  const appIndex = currentAppsList.findIndex((el) => el === appId);
 
-// Types
-import { RootState } from '@Types/rootState.type';
+  const dispatch = useTypedDispatch();
 
-const useApp = (type: App) => {
-  const currentAppsList = useSelector((state: RootState) => state.apps.currentAppsList);
-  const isCollapsed = useSelector((state: RootState) => state.apps.appsState[type].isCollapsed);
-  const isOpen = useSelector((state: RootState) => state.apps.appsState[type].isOpen);
-
-  const dispatch = useDispatch();
-
-  const appIndex = currentAppsList.indexOf(type);
-
-  function handleToggleCollapse() {
-    if (!isOpen) {
+  function handleToggleCollapse(event?: any) {
+    if (event.shiftKey) {
+      const newAppId = uuidv4();
+      dispatch(openApp({ appId: newAppId, type }));
       return;
     }
-
     if (isCollapsed) {
-      dispatch(toggleCollapseApp(type));
-      dispatch(setWindowActive(type));
+      dispatch(toggleCollapseApp(currentAppsList[appIndex]));
+      dispatch(setWindowActive(currentAppsList[appIndex]));
       return;
     }
 
     if (appIndex !== 0) {
-      dispatch(setWindowActive(type));
+      dispatch(setWindowActive(currentAppsList[appIndex]));
       return;
     }
 
-    dispatch(toggleCollapseApp(type));
+    dispatch(toggleCollapseApp(currentAppsList[appIndex]));
     if (currentAppsList.length > 1) {
       dispatch(setWindowActive(currentAppsList[1]));
     }
   }
 
   function handleOpen() {
-    if (!isOpen) {
-      dispatch(openApp(type));
-    }
+    const newAppId = uuidv4();
+    dispatch(openApp({ appId: newAppId, type }));
 
     if (isCollapsed) {
-      dispatch(toggleCollapseApp(type));
-      dispatch(setWindowActive(type));
+      dispatch(toggleCollapseApp(currentAppsList[appIndex]));
+      dispatch(setWindowActive(currentAppsList[appIndex]));
     }
   }
 
   function handleClose() {
-    if (isOpen) {
-      dispatch(closeApp(type));
-    }
+    dispatch(closeApp(currentAppsList[appIndex]));
   }
 
   return {

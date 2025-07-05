@@ -9,7 +9,7 @@
   display: flex;
   justify-content: space-between;
 
-  height: 2rem;
+  height: 30px;
 
   cursor: grab;
 
@@ -20,9 +20,10 @@
 .windowBody {
   position: relative;
 
-  height: calc(100% - 2rem);
+  height: calc(100% - 30px);
 
   background-color: var(--windowBodyBackground);
+  outline: none;
 }
 
 .notActiveWindow {
@@ -34,7 +35,7 @@
   align-items: center;
   justify-content: center;
 
-  width: 2.5rem;
+  width: 40px;
 
   background: transparent;
 }

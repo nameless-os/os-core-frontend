@@ -3,6 +3,7 @@
   height: var(--bottomPartHeight);
   margin-right: 2px;
   padding: 0.3rem 0.6rem;
+  position: relative;
 
   user-select: none;
   transition: background-color 0.12s linear;
@@ -23,4 +24,12 @@
 
 .close {
   border-bottom-color: var(--closedBottomTab);
+}
+
+.appsLength {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 10px;
+  border-radius: 50%;
 }

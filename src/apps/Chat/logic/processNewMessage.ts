@@ -1,20 +1,17 @@
-// Redux
 import store from 'src/redux/store';
 import { changeLastUserMessage, incrementNewMessageCount } from '@Chat/redux/chatUsersSlice/chatUsersSlice';
 import { addMessage, incrementNumberOfRender, readMessages } from '@Chat/redux/chatSlice/chatSlice';
 import { changeLastRoomMessage, incrementRoomNewMessagesCount } from '@Chat/redux/chatRoomsSlice/chatRooms';
-
-// Interface
 import { Message } from '@Interfaces/message.interface';
-
-// Enums
-import { App } from '@Enums/app.enum';
 
 function processNewMessage(newMessage: Message): void {
   const { activeChat } = store.getState().chat;
 
-  if ((newMessage.toUserId === activeChat || (newMessage.owner.id === activeChat && newMessage.toUserId !== null))
-    || newMessage.toRoomId === activeChat) {
+  if (
+    newMessage.toUserId === activeChat ||
+    (newMessage.owner.id === activeChat && newMessage.toUserId !== null) ||
+    newMessage.toRoomId === activeChat
+  ) {
     store.dispatch(addMessage(newMessage));
     if (newMessage.toUserId !== null) {
       store.dispatch(changeLastUserMessage({ message: newMessage }));
@@ -33,9 +30,7 @@ function processNewMessage(newMessage: Message): void {
     store.dispatch(incrementNewMessageCount({ userIndex }));
   }
 
-  if (!store.getState().apps.appsState[App.Chat].isOpen || store.getState().apps.appsState[App.Chat].isCollapsed) {
-    store.dispatch(addMessage(newMessage));
-  }
+  store.dispatch(addMessage(newMessage));
 
   store.dispatch(incrementNumberOfRender());
 }

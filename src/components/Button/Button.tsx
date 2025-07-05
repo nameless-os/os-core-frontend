@@ -10,7 +10,9 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button: FC<Props> = React.memo(({ children, className, type = 'button', forwardedRef, ...props }: Props) => (
   // eslint-disable-next-line react/button-has-type
-  <button className={`${styles.button} ${className}`} type={type} {...props} ref={forwardedRef}>{children}</button>
+  <button className={`${styles.button} ${className}`} type={type} {...props} ref={forwardedRef}>
+    {children}
+  </button>
 ));
 
 export { Button };

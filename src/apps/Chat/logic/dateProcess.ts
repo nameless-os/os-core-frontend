@@ -1,4 +1,3 @@
-// Features
 import { Language } from '@Features/i18n/types/language';
 
 const getReadableSeconds = (seconds: number): string => {

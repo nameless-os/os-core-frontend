@@ -1,51 +1,36 @@
-// Libraries
 import React, { FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-// Redux
-import { setBackgroundImage, setTheme } from '@Features/theme/redux/themeSlice';
-import { setLanguage } from '@Features/i18n/redux/languageSlice';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Enums
-import { App } from '@Enums/app.enum';
-import { BackgroundImage } from '@Features/theme/types/backgroundImage';
-import { Language } from '@Features/i18n/types/language';
-import { Theme } from '@Features/theme/types/theme';
-
-// Interface
-import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Assets
-import imgSource from '@Icons/settings.svg';
-
-// Components
 import { Window } from '@Components/Window/Window';
-import { Icon } from '@Components/Icon/Icon';
 import { SettingsOption } from '@Settings/components/SettingsOption/SettingsOption';
 import { Button } from '@Components/Button/Button';
+import { Theme, Background } from '@Features/settings/enums';
+import {
+  backgroundImages,
+  languages,
+  setBackground,
+  setLanguage,
+  setTheme,
+  themes,
+} from '@Features/settings/redux/settings.slice';
+import { Language } from '@Features/i18n/types/language';
+import { CommonAppProps, App } from '@webos-project/common';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './settings.module.css';
 
-export const Settings: FC<ChildrenNever> = React.memo(() => {
-  const backgroundImage = useSelector((state: RootState) => state.theme.backgroundImage);
-  const backgroundImages = useSelector((state: RootState) => state.theme.backgroundImages);
-  const language = useSelector((state: RootState) => state.language.language);
-  const languages = useSelector((state: RootState) => state.language.languages);
-  const theme = useSelector((state: RootState) => state.theme.theme);
-  const themes = useSelector((state: RootState) => state.theme.themes);
+export const Settings: FC<CommonAppProps> = React.memo(({ appId }) => {
+  const backgroundImage = useTypedSelector((state) => state.settings.background);
+  const language = useTypedSelector((state) => state.settings.language);
+  const theme = useTypedSelector((state) => state.settings.theme);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
   const { t } = useTranslation('settings');
 
   function handleChangeBackground(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedBackgroundImage = event.target.selectedOptions[0].value as BackgroundImage;
-    if (Object.values(BackgroundImage).includes(selectedBackgroundImage)) {
-      dispatch(setBackgroundImage(selectedBackgroundImage));
+    const selectedBackgroundImage = event.target.selectedOptions[0].value as Background;
+    if (Object.values(Background).includes(selectedBackgroundImage)) {
+      dispatch(setBackground(selectedBackgroundImage));
     }
   }
 
@@ -70,8 +55,7 @@ export const Settings: FC<ChildrenNever> = React.memo(() => {
 
   return (
     <>
-      <Icon imgSource={imgSource} type={App.Settings} />
-      <Window type={App.Settings}>
+      <Window type={App.Settings} appId={appId}>
         <form className={styles.form}>
           <div>
             <label htmlFor="themeSelect" className={styles.label}>
@@ -91,7 +75,12 @@ export const Settings: FC<ChildrenNever> = React.memo(() => {
           <div>
             <label htmlFor="localeSelect" className={styles.label}>
               {t('language')}
-              <select id="localeSelect" className={styles.select} onChange={handleChangeLanguage} defaultValue={language}>
+              <select
+                id="localeSelect"
+                className={styles.select}
+                onChange={handleChangeLanguage}
+                defaultValue={language}
+              >
                 {languages.map((el) => (
                   <SettingsOption value={el} category="languages" key={el} />
                 ))}
@@ -109,10 +98,7 @@ export const Settings: FC<ChildrenNever> = React.memo(() => {
             </label>
           </div>
           <div className={styles.resetContainer}>
-            <Button
-              className={styles.resetBtn}
-              onClick={resetSettings}
-            >
+            <Button className={styles.resetBtn} onClick={resetSettings}>
               {t('reset')}
             </Button>
           </div>

@@ -1,8 +1,11 @@
-// Libraries
 import { configureStore } from '@reduxjs/toolkit';
 
-// Redux
-import chatSlice, { addMessageInputValue, changeMessageInputValue, clearMessageInputValue, setMessages } from './chatSlice';
+import chatSlice, {
+  addMessageInputValue,
+  changeMessageInputValue,
+  clearMessageInputValue,
+  setMessages,
+} from './chatSlice';
 
 describe('chatSlice', () => {
   let storeMock = configureStore({

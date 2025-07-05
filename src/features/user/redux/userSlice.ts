@@ -1,21 +1,19 @@
-// Libraries
 import { FetchState } from '@Interfaces/fetchState.interface';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
-// Features
 import { initSocket } from '@Features/websocket/websocket';
 
 interface InitialState {
   currentUser: {
-    username: string,
-    name: string,
-    photo: string,
-    id: number,
-  }
-  login: FetchState,
-  registration: FetchState,
-  isUserLoading: boolean,
+    username: string;
+    name: string;
+    photo: string;
+    id: number;
+  };
+  login: FetchState;
+  registration: FetchState;
+  isUserLoading: boolean;
 }
 
 interface UsernameAndPassword {
@@ -47,43 +45,59 @@ const initialState: InitialState = {
 };
 
 const logout = createAsyncThunk<void, void>('user/logout', async () => {
-  await axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`, {}, {
-    timeout: 30000,
-    withCredentials: true,
-  });
+  await axios.post(
+    `${process.env.REACT_APP_API_URL}/auth/logout`,
+    {},
+    {
+      timeout: 30000,
+      withCredentials: true,
+    },
+  );
 });
 
-const loginFetch = createAsyncThunk<unknown, UsernameAndPassword>('user/login',
+const loginFetch = createAsyncThunk<unknown, UsernameAndPassword>(
+  'user/login',
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        username: payload.username,
-        password: payload.password,
-      }, {
-        timeout: 30000,
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/auth/login`,
+        {
+          username: payload.username,
+          password: payload.password,
+        },
+        {
+          timeout: 30000,
+          withCredentials: true,
+        },
+      );
       return res.data;
     } catch (err: unknown) {
       return rejectWithValue(err);
     }
-  });
+  },
+);
 
-const registration = createAsyncThunk<unknown, UsernameAndPassword>('user/registration',
+const registration = createAsyncThunk<unknown, UsernameAndPassword>(
+  'user/registration',
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
-        username: payload.username,
-        password: payload.password,
-      }, {
-        timeout: 30000,
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/auth/register`,
+        {
+          username: payload.username,
+          password: payload.password,
+        },
+        {
+          timeout: 30000,
+          withCredentials: true,
+        },
+      );
       return res.data;
     } catch (err: unknown) {
       return rejectWithValue(err);
     }
-  });
+  },
+);
 
 const fetchUser = createAsyncThunk('user/fetchUser', async () => {
   const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/me`, {
@@ -124,9 +138,13 @@ const userSlice = createSlice({
     builder.addCase(loginFetch.rejected, (state, action) => {
       state.login.isLoading = false;
       try {
-        state.login.error = (action.payload as AxiosError).response?.data.error || (action.payload as AxiosError).response?.data.message[0];
+        state.login.error =
+          // @ts-ignore
+          (action.payload as AxiosError).response?.data.error ||
+          // @ts-ignore
+          (action.payload as AxiosError).response?.data.message[0];
       } catch (error: unknown) {
-        state.login.error = (action.payload as string);
+        state.login.error = action.payload as string;
       }
     });
     builder.addCase(registration.pending, (state) => {
@@ -141,9 +159,13 @@ const userSlice = createSlice({
     builder.addCase(registration.rejected, (state, action) => {
       state.registration.isLoading = false;
       try {
-        state.registration.error = (action.payload as AxiosError).response?.data.error || (action.payload as AxiosError).response?.data.message[0];
+        state.registration.error =
+          // @ts-ignore
+          (action.payload as AxiosError).response?.data.error ||
+          // @ts-ignore
+          (action.payload as AxiosError).response?.data.message[0];
       } catch (error: unknown) {
-        state.registration.error = (action.payload as string);
+        state.registration.error = action.payload as string;
       }
     });
     builder.addCase(fetchUser.fulfilled, (state, action: { payload: string }) => {

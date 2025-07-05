@@ -1,41 +1,57 @@
-// Libraries
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Logic
 import { getCalcResult } from '@Calculator/logic/getCalculatorResult';
+import { AddToCalculatorInput, CalculatorStore, SetCalculatorInputProps } from '@Calculator/types/calculatorStore.type';
+import { App, AppId } from '@webos-project/common';
+import { closeApp, openApp } from '../../../../redux/slices/appsSlice/apps.slice';
 
-interface InitialState {
-  inputValue: string;
-  lastOperations: [string, string, string];
-}
-
-const initialState: InitialState = {
-  inputValue: '',
-  lastOperations: ['', '', ''],
+const calculatorInitialStore: CalculatorStore = {
+  calculatorsData: {},
 };
 
 const calculatorSlice = createSlice({
   name: 'calculator',
-  initialState,
+  initialState: calculatorInitialStore,
   reducers: {
-    getCalculatorResultAndUpdateLastOperations(state) {
-      const result = getCalcResult(state.inputValue);
-      state.lastOperations = [`${state.inputValue.replace(/\s+/g, '')} = ${result}`, state.lastOperations[0], state.lastOperations[1]];
-      state.inputValue = result;
+    getCalculatorResultAndUpdateLastOperations(state, { payload: appId }: PayloadAction<AppId>) {
+      const result = getCalcResult(state.calculatorsData[appId].inputValue);
+      if (result === 'OpErr') {
+        return;
+      }
+      state.calculatorsData[appId].lastOperations = [
+        `${state.calculatorsData[appId].inputValue.replace(/\s+/g, '')} = ${result}`,
+        state.calculatorsData[appId].lastOperations[0],
+        state.calculatorsData[appId].lastOperations[1],
+      ];
+      state.calculatorsData[appId].inputValue = result;
     },
-    addToCalculatorInput(state, { payload }: { payload: string }) {
-      state.inputValue += payload;
+    addToCalculatorInput(state, { payload }: PayloadAction<AddToCalculatorInput>) {
+      state.calculatorsData[payload.appId].inputValue += payload.inputValue;
     },
-    deleteLastCalculatorInputCharacter(state) {
-      if (state.inputValue === 'Error' || state.inputValue === 'Infinity') return;
-      state.inputValue = state.inputValue.slice(0, state.inputValue.length - 1);
+    deleteLastCalculatorInputCharacter(state, { payload: appId }: PayloadAction<AppId>) {
+      if (state.calculatorsData[appId].inputValue === 'Error' || state.calculatorsData[appId].inputValue === 'Infinity') return;
+      state.calculatorsData[appId].inputValue = state.calculatorsData[appId].inputValue.slice(0, state.calculatorsData[appId].inputValue.length - 1);
     },
-    setCalculatorInput(state, { payload }: { payload: string }) {
-      state.inputValue = payload;
+    setCalculatorInput(state, { payload }: PayloadAction<SetCalculatorInputProps>) {
+      state.calculatorsData[payload.appId].inputValue = payload.inputValue;
     },
-    clearCalculatorInput(state) {
-      state.inputValue = '';
+    clearCalculatorInput(state, { payload: appId }: PayloadAction<AppId>) {
+      state.calculatorsData[appId].inputValue = '';
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(openApp, (state, action) => {
+      if (action.payload.type !== App.Calculator) {
+        return;
+      }
+      state.calculatorsData[action.payload.appId] = {
+        inputValue: '',
+        lastOperations: ['', '', ''],
+      };
+    });
+    builder.addCase(closeApp, (state, action) => {
+      delete state.calculatorsData[action.payload];
+    });
   },
 });
 

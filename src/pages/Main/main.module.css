@@ -1,7 +1,19 @@
 .container {
-  height: 100vh;
+  height: 100%;
   padding: 30px 0 40px;
 
   background-color: aliceblue;
   background-size: cover;
+}
+
+.createIconModal1 {
+  background-color: #303030;
+  padding: 2px;
+}
+
+.createIconModal1Buttons {
+  display: flex;
+  width: 100px;
+  flex-direction: column;
+  gap: 2px;
 }

@@ -1,38 +1,25 @@
-// Libraries
 import React, { FC, useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useDispatch, useSelector } from 'react-redux';
+import { AnimatePresence, motion } from 'framer-motion';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Scrollbars } from 'react-custom-scrollbars';
 
-// Redux
-import {
-  fetchUsers,
-} from '@Chat/redux/chatUsersSlice/chatUsersSlice';
+import { fetchUsers } from '@Chat/redux/chatUsersSlice/chatUsersSlice';
 import { fetchRooms } from '@Chat/redux/chatRoomsSlice/chatRooms';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Interface
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Components
 import { Button } from '@Components/Button/Button';
-import { SelectionCategory } from './components/SelectionCategory/SelectionCategory';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
+import { SelectionCategory } from './components/SelectionCategory/SelectionCategory';
 import styles from './chatSelection.module.css';
 
 const ChatSelection: FC<ChildrenNever> = React.memo(() => {
-  const users = useSelector((state: RootState) => state.chatUsers.users);
-  const rooms = useSelector((state: RootState) => state.chatRooms.rooms);
+  const users = useTypedSelector((state) => state.chatUsers.users);
+  const rooms = useTypedSelector((state) => state.chatRooms.rooms);
 
   const [isOpen, setIsOpen] = useState(true);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -58,32 +45,18 @@ const ChatSelection: FC<ChildrenNever> = React.memo(() => {
             }}
             transition={{ duration: 1 }}
           >
-            <Scrollbars
-              renderView={(({ style, ...props }) => {
-                const viewStyle = {
-                  paddingRight: 12,
-                };
-                return (
-                  <div style={{ ...style, ...viewStyle }} {...props} />
-                );
-              })}
-              autoHide={false}
-            >
-              <SelectionCategory items={rooms} itemsType="Room" categoryName="Rooms" />
-              <SelectionCategory items={users} itemsType="User" categoryName="Users" />
-            </Scrollbars>
+            <SelectionCategory items={rooms} itemsType="Room" categoryName="Rooms"/>
+            <SelectionCategory items={users} itemsType="User" categoryName="Users"/>
           </motion.div>
         )}
       </AnimatePresence>
       <Button
-        className={
-          classNames(styles.toggleVisibilityBtn, {
-            [styles.closeBtn]: !isOpen,
-          })
-        }
+        className={classNames(styles.toggleVisibilityBtn, {
+          [styles.closeBtn]: !isOpen,
+        })}
         onClick={handleClick}
       >
-        {isOpen ? <FontAwesomeIcon icon={faAngleLeft} /> : <FontAwesomeIcon icon={faAngleRight} />}
+        {isOpen ? <FontAwesomeIcon icon={faAngleLeft}/> : <FontAwesomeIcon icon={faAngleRight}/>}
       </Button>
     </div>
   );

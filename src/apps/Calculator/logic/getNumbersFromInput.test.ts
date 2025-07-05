@@ -1,4 +1,3 @@
-// Logic
 import { getNumbersFromInput } from '@Calculator/logic/getNumbersFromInput';
 
 describe('calculator getNumbersFromInput', () => {

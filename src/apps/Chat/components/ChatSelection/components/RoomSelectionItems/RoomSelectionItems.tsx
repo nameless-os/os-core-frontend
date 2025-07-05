@@ -1,23 +1,8 @@
-// Libraries
 import { FC, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-// Redux
-import {
-  changeActiveChat,
-  changeNewMessageCount,
-  fetchMessages,
-  readMessages,
-} from '@Chat/redux/chatSlice/chatSlice';
-
-// Interfaces
+import { changeActiveChat, changeNewMessageCount, fetchMessages, readMessages } from '@Chat/redux/chatSlice/chatSlice';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Room } from '@Apps/Chat/interfaces/room';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Components
 import { getReadableLastVisitDate } from '@Chat/logic/dateProcess';
 import { Loading } from '@Components/Loading/Loading';
 import { Error } from '@Components/Error/Error';
@@ -28,33 +13,33 @@ import {
   fetchRooms,
   openAddRoomForm,
 } from '@Chat/redux/chatRoomsSlice/chatRooms';
-import { ChatSelectionElement } from '../ChatSelectionElement/ChatSelectionElement';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
+import { ChatSelectionElement } from '../ChatSelectionElement/ChatSelectionElement';
 import styles from './roomSelectionItems.module.css';
 
 interface Props extends ChildrenNever {
-  rooms: Room[],
+  rooms: Room[];
 }
 
 const RoomSelectionItems: FC<Props> = ({ rooms }: Props) => {
-  const language = useSelector((state: RootState) => state.language.language);
-  const isLoading = useSelector((state: RootState) => state.chatRooms.isLoading);
-  const hasError = useSelector((state: RootState) => state.chatRooms.hasError);
+  const language = useTypedSelector((state) => state.settings.language);
+  const isLoading = useTypedSelector((state) => state.chatRooms.isLoading);
+  const hasError = useTypedSelector((state) => state.chatRooms.hasError);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
   function changeChat(chatId: number) {
     dispatch(closeAddRoomForm());
     dispatch(changeActiveChat({ id: chatId, type: 'Room' }));
-    dispatch(fetchMessages(chatId));
-    dispatch(readMessages());
+    dispatch(fetchMessages(chatId) as any);
+    dispatch(readMessages() as any);
     dispatch(changeNewMessageCount({ id: chatId, activeType: 'Room' }));
     dispatch(changeNewMessageRoomCountToZero({ userId: chatId }));
   }
 
   const refetchRooms = useCallback(() => {
-    dispatch(fetchRooms());
+    dispatch(fetchRooms() as any);
   }, []);
 
   const handleOpenAddRoom = useCallback(() => {
@@ -83,7 +68,9 @@ const RoomSelectionItems: FC<Props> = ({ rooms }: Props) => {
           changeChat={changeChat}
         />
       ))}
-      <Button className={styles.addButton} onClick={handleOpenAddRoom}>+</Button>
+      <Button className={styles.addButton} onClick={handleOpenAddRoom}>
+        +
+      </Button>
     </>
   );
 };

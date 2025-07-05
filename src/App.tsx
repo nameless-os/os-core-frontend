@@ -1,25 +1,19 @@
-// Libraries
-import { useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-// Types
-import { Theme } from '@Features/theme/types/theme';
-import { RootState } from '@Types/rootState.type';
-
-// Components
 import { TopBar } from '@Components/TopBar/TopBar';
 import { BottomPanel } from '@Components/BottomPanel/BottomPanel';
-
-// Pages
 import { Login } from '@Pages/Login/Login';
 import { Registration } from '@Pages/Registration/Registration';
 import { Main } from '@Pages/Main/Main';
+import { Theme } from '@Features/settings/enums';
+import { useTypedSelector } from '@Hooks';
 
 const App = () => {
-  const theme = useSelector((state: RootState) => state.theme.theme);
+  const theme = useTypedSelector((state) => state.settings.theme);
   const [themeStyle, setThemeStyle] = useState('darkTheme');
+  const [height, setHeight] = useState(document.documentElement.clientHeight);
 
   useEffect(() => {
     switch (theme) {
@@ -48,23 +42,17 @@ const App = () => {
   return (
     <BrowserRouter>
       <AnimatePresence>
-        <div className={themeStyle}>
+        <div className={themeStyle} style={{ height: height }}>
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/registration" element={<Registration />} />
             <Route
-              path='/login'
-              element={<Login />}
-            />
-            <Route
-              path='/registration'
-              element={<Registration />}
-            />
-            <Route
-              path='/'
+              path="/"
               element={
                 <>
-                  <TopBar/>
-                  <Main/>
-                  <BottomPanel/>
+                  <TopBar />
+                  <Main />
+                  <BottomPanel />
                 </>
               }
             />

@@ -1,20 +1,8 @@
-// Libraries
 import React, { FC, useEffect, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-// Redux
 import { simonClick, startShowing, updateStatus } from '@Simon/redux/simonSlice/simonSlice';
-import reduxStore from 'src/redux/store';
-
-// Enums
 import { SimonStatus } from '@Simon/enums/simonStatus.enum';
-import { App } from '@Enums/app.enum';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Assets
 import sound1 from '@Sounds/simon/simon1.mp3';
 import sound2 from '@Sounds/simon/simon2.mp3';
 import sound3 from '@Sounds/simon/simon3.mp3';
@@ -24,15 +12,11 @@ import sound6 from '@Sounds/simon/simon6.mp3';
 import sound7 from '@Sounds/simon/simon7.mp3';
 import sound8 from '@Sounds/simon/simon8.mp3';
 import sound9 from '@Sounds/simon/simon9.wav';
-
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Components
 import { SimonBar } from '@Simon/components/SimonBar/SimonBar';
 import { SimonButton } from '@Simon/components/SimonButton/SimonButton';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './simonMain.module.css';
 
 interface Props extends ChildrenNever {
@@ -42,13 +26,13 @@ interface Props extends ChildrenNever {
 const sounds = [sound1, sound2, sound3, sound4, sound5, sound6, sound7, sound8, sound9];
 
 export const SimonMain: FC<Props> = React.memo(({ numberOfButtons }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
-  const status = useSelector((store: RootState) => store.simon.simonStatus);
-  const pattern = useSelector((store: RootState) => store.simon.pattern);
-  const level = useSelector((store: RootState) => store.simon.level);
-  const isSimonOpen = useSelector((store: RootState) => store.apps.appsState[App.Simon].isOpen);
-  const difficulty = useSelector((store: RootState) => store.simon.difficulty);
+  const status = useTypedSelector((store) => store.simon.simonStatus);
+  const pattern = useTypedSelector((store) => store.simon.pattern);
+  const level = useTypedSelector((store) => store.simon.level);
+  const isSimonOpen = true;
+  const difficulty = useTypedSelector((store) => store.simon.difficulty);
 
   const btnRef1 = useRef<HTMLButtonElement>(null);
   const btnRef2 = useRef<HTMLButtonElement>(null);
@@ -60,7 +44,10 @@ export const SimonMain: FC<Props> = React.memo(({ numberOfButtons }: Props) => {
   const btnRef8 = useRef<HTMLButtonElement>(null);
   const btnRef9 = useRef<HTMLButtonElement>(null);
 
-  const buttonsRefs = useMemo(() => [btnRef1, btnRef2, btnRef3, btnRef4, btnRef5, btnRef6, btnRef7, btnRef8, btnRef9], []);
+  const buttonsRefs = useMemo(
+    () => [btnRef1, btnRef2, btnRef3, btnRef4, btnRef5, btnRef6, btnRef7, btnRef8, btnRef9],
+    [],
+  );
   const buttonsRefsWithLimit = buttonsRefs.slice(0, numberOfButtons);
 
   async function handleClick(numberOfButton: number): Promise<void> {
@@ -76,17 +63,21 @@ export const SimonMain: FC<Props> = React.memo(({ numberOfButtons }: Props) => {
         dispatch(startShowing());
       } else {
         pattern.forEach((el, index) => {
-          setTimeout(async () => {
-            // Use getState because hook not update state in setTimeout
-            if (!reduxStore.getState().apps.appsState[App.Simon].isOpen) return;
-            await new Audio(sounds[el]).play();
-          }, 900 * index + 900);
+          setTimeout(
+            async () => {
+              await new Audio(sounds[el]).play();
+            },
+            900 * index + 900,
+          );
           setTimeout(() => buttonsRefs[el]?.current?.classList.add(styles.btnActive), 900 * index + 900);
           setTimeout(() => buttonsRefs[el]?.current?.classList.remove(styles.btnActive), 900 * index + 1400);
         });
-        setTimeout(() => {
-          dispatch(updateStatus({ status: SimonStatus.Playing }));
-        }, 900 * pattern.length + 400);
+        setTimeout(
+          () => {
+            dispatch(updateStatus({ status: SimonStatus.Playing }));
+          },
+          900 * pattern.length + 400,
+        );
       }
     }
   }, [isSimonOpen, pattern, level, status, dispatch, sounds, buttonsRefs]);

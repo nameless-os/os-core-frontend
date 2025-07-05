@@ -1,52 +1,34 @@
-// Libraries
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-// Redux
 import {
-  addTerminalHistory,
+  addTerminalHistory, getTerminalDataById,
   incrementAutocompleteNumber,
   resetAutocompleteNumber,
   TerminalMessage,
 } from '@Terminal/redux/terminalSlice/terminalSlice';
-
-// Enums
-import { App } from '@Enums/app.enum';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Interfaces
-import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Logic
+import { App, CommonAppProps } from '@webos-project/common';
 import { processTerminalInput } from '@Terminal/logic/processTerminalInput';
 import { getAvailableAutocomplete } from '@Terminal/logic/autocomplete/getAvailableAutocomplete';
-
-// Assets
-import imgSource from '@Icons/terminal.svg';
-
-// Components
 import { Window } from '@Components/Window/Window';
-import { Icon } from '@Components/Icon/Icon';
+import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './terminal.module.css';
 
-export const Terminal: FC<ChildrenNever> = React.memo(() => {
-  const terminalHistory = useSelector((state: RootState) => state.terminal.terminalHistory);
-  const inputHistory = useSelector((state: RootState) => state.terminal.terminalInputHistory);
+export const Terminal: FC<CommonAppProps> = React.memo(({ appId }) => {
+  const terminalData = useTypedSelector((state) => getTerminalDataById(state, appId));
+  const terminalHistory = terminalData!.terminalHistory;
+  const inputHistory = terminalData!.terminalInputHistory;
 
   const [text, setText] = useState('');
   const [inputHistoryNumber, setInputHistoryNumber] = useState(inputHistory.length);
 
   const listRef = useRef<HTMLDivElement>(null);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setText(event.target.value);
-    dispatch(resetAutocompleteNumber());
+    dispatch(resetAutocompleteNumber(appId));
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -57,15 +39,16 @@ export const Terminal: FC<ChildrenNever> = React.memo(() => {
       setText(inputHistory[updatedInputHistoryNumber] || '');
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
-      const updatedInputHistoryNumber = inputHistoryNumber < inputHistory.length - 1 ? inputHistoryNumber + 1 : inputHistoryNumber;
+      const updatedInputHistoryNumber =
+        inputHistoryNumber < inputHistory.length - 1 ? inputHistoryNumber + 1 : inputHistoryNumber;
       setInputHistoryNumber(updatedInputHistoryNumber);
       setText(inputHistory[updatedInputHistoryNumber] || '');
     } else if (event.key === 'Tab') {
       event.preventDefault();
       const textArr = text.split(' ');
-      textArr[textArr.length - 1] = getAvailableAutocomplete(text);
+      textArr[textArr.length - 1] = getAvailableAutocomplete(text, appId);
       setText(textArr.join(' '));
-      dispatch(incrementAutocompleteNumber());
+      dispatch(incrementAutocompleteNumber(appId));
     } else {
       setInputHistoryNumber(inputHistory.length);
     }
@@ -76,10 +59,10 @@ export const Terminal: FC<ChildrenNever> = React.memo(() => {
     const textToReadable = text.trim().toLowerCase();
     if (!textToReadable) return;
     setText(textToReadable);
-    dispatch(addTerminalHistory(`root:~$ ${text}`));
-    processTerminalInput(text);
+    dispatch(addTerminalHistory({ message: `root:~$ ${text}`, appId }));
+    processTerminalInput(text, appId);
     setText('');
-    dispatch(resetAutocompleteNumber());
+    dispatch(resetAutocompleteNumber(appId));
   }
 
   useEffect(() => {
@@ -89,8 +72,7 @@ export const Terminal: FC<ChildrenNever> = React.memo(() => {
 
   return (
     <>
-      <Icon imgSource={imgSource} type={App.Terminal} />
-      <Window type={App.Terminal}>
+      <Window type={App.Terminal} appId={appId}>
         <div className={styles.wrapper} ref={listRef}>
           <ul className={styles.terminalText} id="terminalHistory">
             {terminalHistory.map((terminalMessage: TerminalMessage) => (
@@ -103,7 +85,9 @@ export const Terminal: FC<ChildrenNever> = React.memo(() => {
                     <span>{'$ '}</span>
                     {terminalMessage.message.slice(8)}
                   </>
-                ) : terminalMessage.message}
+                ) : (
+                  terminalMessage.message
+                )}
               </li>
             ))}
           </ul>

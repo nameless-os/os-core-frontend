@@ -1,4 +1,3 @@
-// Logic
 import { findFirstOperatorIndex } from '../findFirstOperatorIndex';
 import { findMaxDecimalLength } from '../findMaxDecimalLength';
 
@@ -17,19 +16,15 @@ function processMultiplyAndDivision(numbers: number[], operators: string[]): [nu
     if (operatorsCopy.indexOf('*') === index) {
       if (decimalLength) {
         numbersCopy[index] =
-          (
-            Math.round(numbersCopy[index] * 10 ** decimalLength)
-            * Math.round(numbersCopy[index + 1] * 10 ** decimalLength)
-          ) / 100 ** decimalLength;
+          (Math.round(numbersCopy[index] * 10 ** decimalLength) *
+            Math.round(numbersCopy[index + 1] * 10 ** decimalLength)) /
+          100 ** decimalLength;
       } else {
         numbersCopy[index] *= numbersCopy[index + 1];
       }
     } else if (decimalLength) {
       numbersCopy[index] =
-        (
-          Math.round(numbersCopy[index] * 10 ** decimalLength)
-          / Math.round(numbersCopy[index + 1] * 10 ** decimalLength)
-        );
+        Math.round(numbersCopy[index] * 10 ** decimalLength) / Math.round(numbersCopy[index + 1] * 10 ** decimalLength);
     } else {
       numbersCopy[index] /= numbersCopy[index + 1];
     }

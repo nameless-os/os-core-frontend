@@ -1,4 +1,3 @@
-// Logic
 import { checkIsCalculatorInputCorrect } from './checkIsCalculatorInputCorrect';
 
 describe('checkIsCalculatorInputCorrect', () => {

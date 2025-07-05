@@ -1,17 +1,10 @@
-// Libraries
 import { FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-// Redux
 import { addUserToNewRoom, removeUserFromNewRoom } from '@Chat/redux/chatRoomsSlice/chatRooms';
-
-// Interface
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Components
 import { Button } from '@Components/Button/Button';
+import { useTypedDispatch } from '@Hooks';
 
-// Styles
 import styles from './addRoomUserSelectItem.module.css';
 
 interface Props extends ChildrenNever {
@@ -22,7 +15,7 @@ interface Props extends ChildrenNever {
 const AddRoomUserSelectItem: FC<Props> = ({ username, id }: Props) => {
   const [isIncluded, setIsIncluded] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
   function toggleUserIncluded() {
     if (isIncluded) {
@@ -36,10 +29,7 @@ const AddRoomUserSelectItem: FC<Props> = ({ username, id }: Props) => {
   return (
     <div className={`${styles.userSelectItem} ${isIncluded ? styles.selectedItem : ''}`}>
       <p>{username}</p>
-      <Button
-        onClick={toggleUserIncluded}
-        className={styles.userSelectButton}
-      >
+      <Button onClick={toggleUserIncluded} className={styles.userSelectButton}>
         {isIncluded ? '-' : '+'}
       </Button>
     </div>

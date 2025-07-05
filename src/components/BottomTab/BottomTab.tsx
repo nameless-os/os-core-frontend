@@ -1,23 +1,12 @@
-// Libraries
-import { RootState } from '@Types/rootState.type';
 import React, { FC } from 'react';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Enums
-import { App } from '@Enums/app.enum';
-
-// Hooks
-import { useApp } from '@Hooks/useApp/useApp';
-
-// Interfaces
+import { App } from '@webos-project/common';
+import { useApp, useTypedSelector } from '@Hooks';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Components
 import { Button } from '@Components/Button/Button';
-import { useSelector } from 'react-redux';
 
-// Styles
 import styles from './bottomTab.module.css';
 
 interface Props extends ChildrenNever {
@@ -26,8 +15,9 @@ interface Props extends ChildrenNever {
 }
 
 const BottomTab: FC<Props> = ({ type, icon }: Props) => {
-  const isOpen = useSelector((state: RootState) => state.apps.appsState[type].isOpen);
-
+  const apps = useTypedSelector((state) => state.apps.apps);
+  const appsLength = Object.values(apps).filter((app) => app?.type === type).length;
+  const isOpen = appsLength !== 0;
   const { appIndex, handleToggleCollapse, handleOpen } = useApp(type);
 
   return (
@@ -45,6 +35,7 @@ const BottomTab: FC<Props> = ({ type, icon }: Props) => {
           onClick={handleToggleCollapse}
         >
           <FontAwesomeIcon icon={icon} />
+          {appsLength > 1 && <p className={styles.appsLength}>{appsLength}</p>}
         </Button>
       )}
     </div>

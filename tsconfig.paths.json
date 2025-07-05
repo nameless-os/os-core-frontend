@@ -9,8 +9,7 @@
       "@Types/*": ["./src/types/*"],
       "@Enums/*": ["./src/enums/*"],
       "@Features/*": ["./src/features/*"],
-      "@Hooks/*": ["./src/hooks/*"],
-      "@Utils/*": ["./src/utils/*"],
+      "@Hooks": ["./src/hooks"],
       "@Backgrounds/*": ["./src/assets/images/backgrounds/*"],
       "@Icons/*": ["./src/assets/images/icons/*"],
       "@Sounds/*": ["./src/assets/sounds/*"],
@@ -22,7 +21,9 @@
       "@Translate/*": ["./src/apps/Translate/*"],
       "@Simon/*": ["./src/apps/Simon/*"],
       "@Settings/*": ["./src/apps/Settings/*"],
-      "@Terminal/*": ["./src/apps/Terminal/*"]
+      "@Terminal/*": ["./src/apps/Terminal/*"],
+      "@BullsAndCows": ["./src/apps/BullsAndCows"],
+      "@Assets/*": ["./src/assets/*"]
     }
   }
 }

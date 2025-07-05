@@ -1,21 +1,13 @@
-// Libraries
 import { FC, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
-// Features
 import { Language } from '@Features/i18n/types/language';
-
-// Types
-import { RootState } from '@Types/rootState.type';
-
-// Interface
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
+import { useTypedSelector } from '@Hooks';
 
-// Styles
 import styles from './topDate.module.css';
 
 export const TopDate: FC<ChildrenNever> = () => {
-  const language = useSelector((state: RootState) => state.language.language);
+  const language = useTypedSelector((state) => state.settings.language);
   const [date, setDate] = useState(new Date());
 
   const locale = language === Language.Russian ? 'ru-RU' : 'en-GB';

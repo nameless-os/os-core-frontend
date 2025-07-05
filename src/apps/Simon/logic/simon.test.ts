@@ -1,4 +1,3 @@
-// Logic
 import { generatePattern, regeneratePattern, updatePattern } from '.';
 
 describe('logic/simon', () => {

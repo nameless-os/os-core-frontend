@@ -1,26 +1,22 @@
-// Libraries
 import React, { FC, ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
 
-// Redux
 import { addToCalculatorInput } from '@Calculator/redux/calculatorSlice/calculatorSlice';
-
-// Components
 import { CalculatorButton } from '@Calculator/components/CalculatorButton/CalculatorButton';
+import { useTypedDispatch } from '@Hooks';
 
-// Interfaces
-import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Styles
 import styles from './calculatorNumberButtons.module.css';
 
 const numberButtons = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-const CalculatorNumberButtons: FC<ChildrenNever> = React.memo(() => {
-  const dispatch = useDispatch();
+interface Props {
+  appId: string;
+}
+
+const CalculatorNumberButtons: FC<Props> = React.memo(({ appId }) => {
+  const dispatch = useTypedDispatch();
 
   function handleAddValueToInput(value: string) {
-    dispatch(addToCalculatorInput(value));
+    dispatch(addToCalculatorInput({ inputValue: value, appId }));
   }
 
   return (

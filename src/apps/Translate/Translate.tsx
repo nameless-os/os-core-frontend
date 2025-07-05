@@ -1,29 +1,13 @@
-// Libraries
 import React, { ChangeEvent, FC, useState } from 'react';
 import axios from 'axios';
-
-// Interfaces
-import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Icons
-import imgSource from '@Icons/translate.svg';
-
-// Enums
-import { App } from '@Enums/app.enum';
-
-// Components
-import { Icon } from '@Components/Icon/Icon';
+import { App, CommonAppProps } from '@webos-project/common';
 import { Window } from '@Components/Window/Window';
 import { Button } from '@Components/Button/Button';
 import { InDevelopment } from '@Components/InDevelopment/inDevelopment';
-
-// Constants
 import { AvailableTranslateLanguages } from './constants/availableTranslateLanguages';
-
-// Styles
 import styles from './translate.module.css';
 
-const Translate: FC<ChildrenNever> = React.memo(() => {
+const Translate: FC<CommonAppProps> = React.memo(({ appId }) => {
   const [reqLanguage, setReqLanguage] = useState(AvailableTranslateLanguages.EN);
   const [reqText, setReqText] = useState('');
   const [resLanguage, setResLanguage] = useState(AvailableTranslateLanguages.EN);
@@ -52,8 +36,7 @@ const Translate: FC<ChildrenNever> = React.memo(() => {
 
   return (
     <>
-      <Icon imgSource={imgSource} type={App.Translate} />
-      <Window type={App.Translate}>
+      <Window type={App.Translate} appId={appId}>
         <InDevelopment />
       </Window>
     </>
@@ -61,8 +44,7 @@ const Translate: FC<ChildrenNever> = React.memo(() => {
 
   return (
     <>
-      <Icon imgSource={imgSource} type={App.Translate} />
-      <Window type={App.Translate}>
+      <Window type={App.Translate} appId={appId}>
         <div className={styles.container}>
           <div className={styles.reqContainer}>
             <label htmlFor="reqTranslateLanguage">

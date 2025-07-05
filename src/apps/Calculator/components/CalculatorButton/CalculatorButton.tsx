@@ -1,13 +1,8 @@
-// Libraries
 import React, { FC, ReactNode } from 'react';
 
-// Interfaces
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-
-// Components
 import { Button } from '@Components/Button/Button';
 
-// Styles
 import styles from './calculatorButton.module.css';
 
 interface Props extends ChildrenNever {

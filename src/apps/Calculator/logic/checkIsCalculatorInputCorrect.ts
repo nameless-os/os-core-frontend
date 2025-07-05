@@ -10,12 +10,12 @@ function checkIsCalculatorInputCorrect(inputValue: string): boolean {
   const onlyOperatorsAndNumbersRegExp = new RegExp(/^[\d+\-*^./\s]*$/g);
 
   return !(
-    !onlyOperatorsAndNumbersRegExp.test(inputValue)
-    || operatorRegExp.test(inputValue[0])
-    || inputValue.startsWith('--')
-    || operatorsInRowRegExp.test(inputValue)
-    || minusesInRowRegExp.test(inputValue)
-    || !hasNumberRegExp.test(inputValue)
+    !onlyOperatorsAndNumbersRegExp.test(inputValue) ||
+    operatorRegExp.test(inputValue[0]) ||
+    inputValue.startsWith('--') ||
+    operatorsInRowRegExp.test(inputValue) ||
+    minusesInRowRegExp.test(inputValue) ||
+    !hasNumberRegExp.test(inputValue)
   );
 }
 

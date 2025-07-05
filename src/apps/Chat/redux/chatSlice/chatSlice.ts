@@ -1,19 +1,18 @@
-// Libraries
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import store from 'src/redux/store';
 
-// Interfaces
 import { Message } from '@Interfaces/message.interface';
-
-// Features
 import { socket } from '@Features/websocket/websocket';
 
 const fetchMessages = createAsyncThunk('users/fetchMessages', async (from?: number) => {
-  const response = await axios.get(`${process.env.REACT_APP_API_URL}/chat/messages?from=${from}&type=${store.getState().chat.activeType}`, {
-    timeout: 30000,
-    withCredentials: true,
-  });
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/chat/messages?from=${from}&type=${store.getState().chat.activeType}`,
+    {
+      timeout: 30000,
+      withCredentials: true,
+    },
+  );
   return response.data;
 });
 
@@ -34,13 +33,13 @@ const sendMessage = createAsyncThunk('users/readMessages', (payload: string) => 
 });
 
 interface InitialState {
-  messages: Message[],
-  numberOfRender: number,
-  text: string,
-  isLoading: boolean,
-  hasError: boolean,
-  activeChat: number,
-  activeType: string,
+  messages: Message[];
+  numberOfRender: number;
+  text: string;
+  isLoading: boolean;
+  hasError: boolean;
+  activeChat: number;
+  activeType: string;
 }
 
 const initialState: InitialState = {
@@ -76,12 +75,16 @@ const chatSlice = createSlice({
     clearMessageInputValue(state) {
       state.text = '';
     },
-    changeActiveChat(state, { payload }: { payload: { id: number, type: string } }) {
+    changeActiveChat(state, { payload }: { payload: { id: number; type: string } }) {
       state.activeChat = payload.id;
       state.activeType = payload.type;
     },
-    changeNewMessageCount(state, { payload }: { payload: { id: number, activeType: string, roomId?: number } }) {
-      if (((payload.id === state.activeChat && payload.activeType === 'User') || (payload.roomId === state.activeChat && payload.activeType === 'Room')) && payload.activeType === state.activeType) {
+    changeNewMessageCount(state, { payload }: { payload: { id: number; activeType: string; roomId?: number } }) {
+      if (
+        ((payload.id === state.activeChat && payload.activeType === 'User') ||
+          (payload.roomId === state.activeChat && payload.activeType === 'Room')) &&
+        payload.activeType === state.activeType
+      ) {
         state.messages.forEach((message, i) => {
           if (message.listOfReaders.includes(payload.id) || message.owner.id === payload.id) return;
 
