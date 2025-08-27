@@ -15,4 +15,6 @@ const SettingsOption: FC<Props> = React.memo(({ value, category }: Props) => {
   return <option value={value}>{t(`${category}.${value}`)}</option>;
 });
 
+SettingsOption.displayName = 'SettingsOption';
+
 export { SettingsOption };

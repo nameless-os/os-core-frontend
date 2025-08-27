@@ -10,4 +10,6 @@ const InDevelopment: FC<ChildrenNever> = React.memo(() => (
   </div>
 ));
 
+InDevelopment.displayName = 'InDevelopment';
+
 export { InDevelopment };

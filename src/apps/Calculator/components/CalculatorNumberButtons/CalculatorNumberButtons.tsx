@@ -1,22 +1,22 @@
 import React, { FC, ReactNode } from 'react';
 
-import { addToCalculatorInput } from '@Calculator/redux/calculatorSlice/calculatorSlice';
 import { CalculatorButton } from '@Calculator/components/CalculatorButton/CalculatorButton';
-import { useTypedDispatch } from '@Hooks';
+import { useCalculatorStore } from '../../stores/calculator.store';
 
 import styles from './calculatorNumberButtons.module.css';
+import { AppInstanceId } from '@nameless-os/sdk';
 
 const numberButtons = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 interface Props {
-  appId: string;
+  instanceId: AppInstanceId;
 }
 
-const CalculatorNumberButtons: FC<Props> = React.memo(({ appId }) => {
-  const dispatch = useTypedDispatch();
+const CalculatorNumberButtons: FC<Props> = React.memo(({ instanceId }) => {
+  const addToCalculatorInput = useCalculatorStore((state) => state.addToCalculatorInput);
 
   function handleAddValueToInput(value: string) {
-    dispatch(addToCalculatorInput({ inputValue: value, appId }));
+    addToCalculatorInput({ inputValue: value, instanceId });
   }
 
   return (
@@ -34,5 +34,7 @@ const CalculatorNumberButtons: FC<Props> = React.memo(({ appId }) => {
     </div>
   );
 });
+
+CalculatorNumberButtons.displayName = 'CalculatorNumberButtons';
 
 export { CalculatorNumberButtons };

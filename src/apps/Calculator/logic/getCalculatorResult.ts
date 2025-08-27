@@ -1,4 +1,4 @@
-import { deleteAllSpaces } from '@webos-project/common';
+import { deleteAllSpaces } from '@nameless-os/sdk';
 
 import { checkIsCalculatorInputCorrect } from './checkIsCalculatorInputCorrect';
 import { processPow } from './processes/processPow';

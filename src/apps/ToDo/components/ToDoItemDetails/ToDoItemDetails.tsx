@@ -3,17 +3,11 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-import {
-  changeActiveToDoPage,
-  closeToDoUpdateError,
-  updateToDoItem,
-  updateToDoItemLocal,
-} from '@ToDo/redux/toDoSlice/toDoSlice';
 import { TopWindowError } from '@Components/TopWindowError/TopWindowError';
 import { Button } from '@Components/Button/Button';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
 import styles from './ToDoItemDetails.module.css';
+import useToDoStore from '@ToDo/stores/toDo.store';
 
 interface Props extends ChildrenNever {
   id: string;
@@ -24,11 +18,15 @@ function isLoggedIn() {
 }
 
 const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
-  const toDoItem = useTypedSelector(
-    (state) => state.toDo.toDoList[state.toDo.toDoList.findIndex((el) => el.id === id)],
+  const toDoItem = useToDoStore(
+    (state) => state.toDoList[state.toDoList.findIndex((el) => el.id === id)],
   );
-  const isUpdateLoading = useTypedSelector((state) => state.toDo.isUpdateLoading);
-  const updateError = useTypedSelector((state) => state.toDo.updateError);
+  const isUpdateLoading = useToDoStore((state) => state.isUpdateLoading);
+  const updateError = useToDoStore((state) => state.updateError);
+  const closeToDoUpdateError = useToDoStore((state) => state.closeToDoUpdateError);
+  const changeActiveToDoPage = useToDoStore((state) => state.changeActiveToDoPage);
+  const updateToDoItem = useToDoStore((state) => state.updateToDoItem);
+  const updateToDoItemLocal = useToDoStore((state) => state.updateToDoItemLocal);
 
   const [text, setText] = useState(toDoItem.heading);
   const [description, setDescription] = useState(toDoItem.description);
@@ -37,10 +35,8 @@ const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
 
   const nameRef = useRef<HTMLInputElement>(null);
 
-  const dispatch = useTypedDispatch();
   const { t } = useTranslation('toDo');
 
-  // Add useEffect because focus in setIsEditableToTrue don't work on first click
   useEffect(() => {
     if (!isEditable) {
       return;
@@ -48,9 +44,8 @@ const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
     nameRef.current?.focus();
   }, [isEditable]);
 
-  // Close error if to do list trigger it
   useEffect(() => {
-    dispatch(closeToDoUpdateError());
+    closeToDoUpdateError();
   }, []);
 
   function handleChangeName(event: ChangeEvent<HTMLInputElement>) {
@@ -70,8 +65,8 @@ const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
   }
 
   function handleBack() {
-    dispatch(closeToDoUpdateError());
-    dispatch(changeActiveToDoPage(''));
+    closeToDoUpdateError();
+    changeActiveToDoPage('');
   }
 
   function handleCancel() {
@@ -80,34 +75,30 @@ const ToDoItemDetails: FC<Props> = ({ id }: Props) => {
 
   function handleSave() {
     if (isLoggedIn()) {
-      dispatch(
-        updateToDoItem({
-          id,
-          description,
-          heading: text,
-          isComplete,
-        }) as any,
-      );
+      updateToDoItem({
+        id,
+        description,
+        heading: text,
+        isComplete,
+      });
     } else {
-      dispatch(
-        updateToDoItemLocal({
-          id,
-          description,
-          heading: text,
-          isComplete,
-        }),
-      );
+      updateToDoItemLocal({
+        id,
+        description,
+        heading: text,
+        isComplete,
+      });
     }
     setIsEditable(false);
   }
 
   function closeUpdateError() {
-    dispatch(closeToDoUpdateError());
+    closeToDoUpdateError();
   }
 
   return (
     <>
-      <TopWindowError handleClick={closeUpdateError} error={updateError} />
+      <TopWindowError handleClick={closeUpdateError} error={updateError}/>
       <form className={styles.form}>
         <label htmlFor="toDoDetailsHeadingInput" className={styles.label}>
           <span>{`${t('heading')}:`}</span>

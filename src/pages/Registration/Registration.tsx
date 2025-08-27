@@ -6,8 +6,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import space from '@Backgrounds/space.webp';
-import { registration } from '@Features/user/redux/userSlice';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
 import { Button } from '@Components/Button/Button';
 
 import styles from './registration.module.css';
@@ -16,11 +14,10 @@ const Registration: FC<ChildrenNever> = () => {
   const [formError, setFormError] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible2, setIsPasswordVisible2] = useState(false);
-  const registrationError = useTypedSelector((state) => state.user.registration.error);
-  const isRegistrationLoading = useTypedSelector((state) => state.user.registration.isLoading);
+  const registrationError = '';
+  const isRegistrationLoading = false;
 
   const navigate = useNavigate();
-  const dispatch = useTypedDispatch();
   const {
     register,
     handleSubmit,
@@ -43,12 +40,6 @@ const Registration: FC<ChildrenNever> = () => {
   }
 
   function handleRegistration() {
-    dispatch(
-      registration({
-        username: getValues('username'),
-        password: getValues('password'),
-      }) as any,
-    );
   }
 
   return (
@@ -64,7 +55,7 @@ const Registration: FC<ChildrenNever> = () => {
           </span>
           <label htmlFor="loginName" className={styles.label}>
             <span className={`${styles.inputErrorDefault} ${errors.username ? styles.inputError : ''}`}>
-              {(errors.username?.message as any) || 'Error'}
+              {(errors.username?.message as never) || 'Error'}
             </span>
             <div className={styles.inputBtnContainer}>
               <div className={styles.empty} />
@@ -98,7 +89,7 @@ const Registration: FC<ChildrenNever> = () => {
           </label>
           <label htmlFor="loginPassword" className={styles.label}>
             <span className={`${styles.inputErrorDefault} ${errors.password ? styles.inputError : ''}`}>
-              {(errors.password?.message as any) || 'Error'}
+              {(errors.password?.message as never) || 'Error'}
             </span>
             <div className={styles.inputBtnContainer}>
               <div className={styles.empty} />
@@ -130,7 +121,7 @@ const Registration: FC<ChildrenNever> = () => {
           </label>
           <label htmlFor="loginPassword" className={styles.label}>
             <span className={`${styles.inputErrorDefault} ${errors.passwordConfirmation ? styles.inputError : ''}`}>
-              {(errors.passwordConfirmation?.message as any) || 'Error'}
+              {(errors.passwordConfirmation?.message as never) || 'Error'}
             </span>
             <div className={styles.inputBtnContainer}>
               <div className={styles.empty} />

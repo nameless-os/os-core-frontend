@@ -10,46 +10,37 @@ import house from '@Backgrounds/house.gif';
 import waterfall from '@Backgrounds/waterfall.gif';
 import dynamic from '@Backgrounds/dynamic.gif';
 import dynamic2 from '@Backgrounds/dynamic2.gif';
-import { Terminal } from '@Terminal/Terminal';
-import { Settings } from '@Settings/Settings';
-import { Calculator } from '@Calculator/Calculator';
-import { ToDo } from '@ToDo/ToDo';
-import { Chat } from '@Chat/Chat';
-import { Simon } from '@Simon/Simon';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Minesweeper } from '@webos-project/minesweeper';
-import { Translate } from '@Translate/Translate';
-import { MessageAlert } from '@Components/MessageAlert/MessageAlert';
 import { Welcome } from '@Components/Welcome/Welcome';
-import { fetchUser } from '@Features/user/redux/userSlice';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Background } from '@Features/settings/enums';
-import { App } from '@webos-project/common';
 import { Button } from '@Components/Button/Button';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
-import { addAppIcon } from '@Features/icons/redux/icon.slice';
-import minesweeperIcon from '@Icons/minesweeper.svg';
+import { Window } from '@Components/Window/Window';
 
 import styles from './main.module.css';
-import { Icon } from '@Components/Icon/Icon';
-import { AppIconState } from '@Features/icons/redux/types/icon.slice.types';
+import { useWindowManagerStore } from '../../api/windowManager/windowManager.store';
+import { AltTabOverlay } from '@Components/AltTabOverlay/AltTabOverlay';
+import { Toaster } from 'sonner';
+import { systemApi } from '../../index';
+import { useBackground } from '@Settings/stores/settings.store';
+import { WindowId } from '@nameless-os/sdk';
 
 const Main: FC<ChildrenNever> = () => {
-  const apps = useTypedSelector((state) => state.apps.apps);
-  const icons = useTypedSelector((state) => state.icon.icons);
-  const backgroundImage = useTypedSelector((state) => state.settings.background);
+  const backgroundImage = useBackground();
   const [themeBackground, setThemeBackground] = useState('');
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(!sessionStorage.getItem('isWelcomeOpen'));
-  const dispatch = useTypedDispatch();
   const [modalX, setModalX] = useState(0);
   const [modalY, setModalY] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [altTabVisible, setAltTabVisible] = useState(false);
 
-  useEffect(() => {
-    dispatch(fetchUser() as any);
-  }, [dispatch]);
+  const windows = useWindowManagerStore(state => state.windows);
 
-  const backgroundImagesAssets = useMemo(
+  function focusWindowById(id: WindowId) {
+    systemApi.windowManager.focusWindow(id);
+    setAltTabVisible(false);
+  }
+
+  const backgroundImagesAssets: Record<Background, string> = useMemo(
     () => ({
       [Background.Car]: car,
       [Background.Fog]: fog,
@@ -61,75 +52,88 @@ const Main: FC<ChildrenNever> = () => {
       [Background.Cat]: cat,
       [Background.House]: house,
       [Background.Waterfall]: waterfall,
+      [Background.CustomImage]: planet,
+      [Background.CustomUrl]: planet,
     }),
     [],
   );
 
   useEffect(() => {
-    // @ts-ignore
     setThemeBackground(backgroundImagesAssets[backgroundImage]);
   }, [backgroundImage, backgroundImagesAssets]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && (e.code === 'KeyQ')) {
+        e.preventDefault();
+        setAltTabVisible(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Alt') {
+        setAltTabVisible(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   const handleWelcomeClose = useCallback(() => {
     setIsWelcomeOpen(false);
     sessionStorage.setItem('isWelcomeOpen', 'No');
+    setTimeout(() => {
+      systemApi.sound.playUrl('/assets/sounds/startup.mp3', {
+        volume: 0.3,
+      });
+    }, 1000);
   }, []);
 
-  function handleContext(event: any) {
+  function handleContext(event: React.MouseEvent<HTMLDivElement>) {
     event.preventDefault();
-    if (!(event.target.id === 'main-container')) {
+
+    if (!(event.target instanceof HTMLElement) || event.target.id !== 'main-container') {
       return;
     }
+
     setModalX(event.pageX);
     setModalY(event.pageY);
     setModalOpen(true);
   }
 
   function handleAddIcon() {
-    dispatch(addAppIcon({ app: App.Minesweeper, image: minesweeperIcon }));
   }
 
   return (
-    <div style={{ backgroundImage: `url(${themeBackground})` }} className={styles.container} id="main-container" onContextMenu={handleContext}>
-      <AnimatePresence>{isWelcomeOpen && <Welcome handleWelcomeClose={handleWelcomeClose} />}</AnimatePresence>
+    <div style={{ backgroundImage: `url(${themeBackground})` }} className={styles.container} id="main-container"
+         onContextMenu={handleContext}>
+      <AnimatePresence>{isWelcomeOpen && <Welcome handleWelcomeClose={handleWelcomeClose}/>}</AnimatePresence>
       {<div style={{ position: 'absolute', zIndex: 2, top: modalY, left: modalX }} className={styles.createIconModal1}>
         <div className={styles.createIconModal1Buttons}>
           <Button onClick={handleAddIcon}>Add Icon</Button>
         </div>
       </div>}
-      <div> 
-        {icons.map((icon) => (
-          <Icon type={(icon as AppIconState).additionalState.app} imgSource={icon.image} position={icon.position} />
-        ))}
-      </div>
       <div>
-        {Object.values(apps).map((app) => {
-          if (app === null) {
-            return <></>;
-          }
-          switch (app.type) {
-            case App.Terminal:
-              return <Terminal appId={app.id} />;
-            case App.Settings:
-              return <Settings appId={app.id} />;
-            case App.Calculator:
-              return <Calculator appId={app.id} />;
-            case App.Chat:
-              return <Chat appId={app.id} />;
-            case App.Simon:
-              return <Simon appId={app.id} />;
-            case App.Minesweeper:
-              return <Minesweeper appId={app.id} />;
-            case App.Translate:
-              return <Translate appId={app.id} />;
-            case App.ToDo:
-              return <ToDo appId={app.id} />;
-            default:
-              return <></>;
-          }
+        {windows.map((win) => {
+          return !win.minimized && <Window key={win.id} windowProps={win}/>
         })}
-        <MessageAlert />
       </div>
+      <AltTabOverlay
+        windows={windows}
+        visible={altTabVisible}
+        onSelect={focusWindowById}
+      />
+      <Toaster
+        position="bottom-right"
+        richColors
+        closeButton
+        duration={5000}
+      />
     </div>
   );
 };

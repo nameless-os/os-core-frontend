@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useMemo, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { simonClick, startShowing, updateStatus } from '@Simon/redux/simonSlice/simonSlice';
 import { SimonStatus } from '@Simon/enums/simonStatus.enum';
 import sound1 from '@Sounds/simon/simon1.mp3';
 import sound2 from '@Sounds/simon/simon2.mp3';
@@ -15,24 +14,28 @@ import sound9 from '@Sounds/simon/simon9.wav';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { SimonBar } from '@Simon/components/SimonBar/SimonBar';
 import { SimonButton } from '@Simon/components/SimonButton/SimonButton';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
 import styles from './simonMain.module.css';
+import { useSimonStore } from '@Simon/stores/simon.store';
+import { AppInstanceId } from '@nameless-os/sdk';
 
 interface Props extends ChildrenNever {
   numberOfButtons: number;
+  instanceId: AppInstanceId;
 }
 
 const sounds = [sound1, sound2, sound3, sound4, sound5, sound6, sound7, sound8, sound9];
 
-export const SimonMain: FC<Props> = React.memo(({ numberOfButtons }: Props) => {
-  const dispatch = useTypedDispatch();
-
-  const status = useTypedSelector((store) => store.simon.simonStatus);
-  const pattern = useTypedSelector((store) => store.simon.pattern);
-  const level = useTypedSelector((store) => store.simon.level);
+// eslint-disable-next-line react/display-name,react/prop-types
+export const SimonMain: FC<Props> = React.memo(({ numberOfButtons, instanceId }) => {
+  const status = useSimonStore((store) => store.get(instanceId)!.simonStatus);
+  const pattern = useSimonStore((store) => store.get(instanceId)!.pattern);
+  const level = useSimonStore((store) => store.get(instanceId)!.level);
+  const difficulty = useSimonStore((store) => store.get(instanceId)!.difficulty);
+  const simonClick = useSimonStore((store) => store.simonClick);
+  const startShowing = useSimonStore((store) => store.startShowing);
+  const updateStatus = useSimonStore((store) => store.updateStatus);
   const isSimonOpen = true;
-  const difficulty = useTypedSelector((store) => store.simon.difficulty);
 
   const btnRef1 = useRef<HTMLButtonElement>(null);
   const btnRef2 = useRef<HTMLButtonElement>(null);
@@ -54,13 +57,13 @@ export const SimonMain: FC<Props> = React.memo(({ numberOfButtons }: Props) => {
     await new Audio(sounds[numberOfButton]).play();
     setTimeout(() => buttonsRefs[numberOfButton]?.current?.classList.add(styles.btnActive), 0);
     setTimeout(() => buttonsRefs[numberOfButton]?.current?.classList.remove(styles.btnActive), 400);
-    setTimeout(() => dispatch(simonClick({ numberOfButton })), 400);
+    setTimeout(() => simonClick(instanceId, numberOfButton), 400);
   }
 
   useEffect(() => {
     if (status === SimonStatus.Showing) {
       if (pattern.length !== 3 + (level - 1)) {
-        dispatch(startShowing());
+        startShowing(instanceId);
       } else {
         pattern.forEach((el, index) => {
           setTimeout(
@@ -74,19 +77,20 @@ export const SimonMain: FC<Props> = React.memo(({ numberOfButtons }: Props) => {
         });
         setTimeout(
           () => {
-            dispatch(updateStatus({ status: SimonStatus.Playing }));
+            updateStatus(instanceId, SimonStatus.Playing);
           },
           900 * pattern.length + 400,
         );
       }
     }
-  }, [isSimonOpen, pattern, level, status, dispatch, sounds, buttonsRefs]);
+  }, [isSimonOpen, pattern, level, status, sounds, buttonsRefs]);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.buttons}>
         {buttonsRefsWithLimit.map((ref, index) => (
           <SimonButton
+            instanceId={instanceId}
             btnRef={ref}
             handleClick={handleClick}
             btnNumber={index}
@@ -95,7 +99,7 @@ export const SimonMain: FC<Props> = React.memo(({ numberOfButtons }: Props) => {
           />
         ))}
       </div>
-      <SimonBar difficulty={difficulty} />
+      <SimonBar instanceId={instanceId} difficulty={difficulty} />
     </div>
   );
 });

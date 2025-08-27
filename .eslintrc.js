@@ -35,10 +35,24 @@ module.exports = {
     "no-continue": 0,
     "react/jsx-no-bind": 0,
     "react-hooks/exhaustive-deps": 0,
-    "no-param-reassign": ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
+    "no-param-reassign": ['error', {
+      props: true, ignorePropertyModificationsFor: [
+        'state',
+        'video',
+        'audio',
+        'e',
+        'event',
+        'target',
+        'currentTarget',
+        'nextSibling',
+        'previousSibling',
+        'parentElement'
+      ]
+    }],
     "testing-library/no-unnecessary-act": 0,
     "@typescript-eslint/no-unused-vars": 1,
-    "import/extensions": 0
+    "import/extensions": 0,
+    "react/prop-types": 0
   },
   settings: {
     react: {

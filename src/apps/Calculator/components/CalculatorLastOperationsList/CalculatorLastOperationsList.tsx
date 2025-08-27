@@ -1,16 +1,18 @@
 import { FC } from 'react';
 import { v4 as uuid4 } from 'uuid';
 
-import { useTypedSelector } from '@Hooks';
-
 import styles from './calculatorLastOperationsList.module.css';
+import { AppInstanceId } from '@nameless-os/sdk';
+import { useCalculatorStore } from '../../stores/calculator.store';
 
 interface Props {
-  appId: string;
+  instanceId: AppInstanceId;
 }
 
-const CalculatorLastOperationsList: FC<Props> = ({ appId }) => {
-  const lastOperations = useTypedSelector((state) => state.calculator.calculatorsData[appId].lastOperations);
+const CalculatorLastOperationsList: FC<Props> = ({ instanceId }) => {
+  const lastOperations = useCalculatorStore((state) =>
+    state.get(instanceId)?.lastOperations || ['', '', '']
+  );
 
   return (
     <ul className={styles.operationHistory}>

@@ -1,44 +1,27 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-import { loginFetch } from '@Features/user/redux/userSlice';
 import space from '@Backgrounds/space.webp';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Button } from '@Components/Button/Button';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
 import styles from './login.module.css';
 
 const Login: FC<ChildrenNever> = () => {
   const [formError, setFormError] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const loginError = useTypedSelector((state) => state.user.login.error);
-  const isLoginLoading = useTypedSelector((state) => state.user.login.isLoading);
 
-  const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
   } = useForm();
 
-  useEffect(() => {
-    setFormError(loginError);
-  }, [loginError]);
-
-  function handleLogin(): void {
-    dispatch(
-      loginFetch({
-        username: getValues('username'),
-        password: getValues('password'),
-      }) as any,
-    );
-  }
+  function handleLogin(): void {}
 
   function handleTooglePasswordVisible(): void {
     setIsPasswordVisible((value) => !value);
@@ -57,7 +40,7 @@ const Login: FC<ChildrenNever> = () => {
           </span>
           <label htmlFor="loginName" className={styles.label}>
             <span className={`${styles.inputErrorDefault} ${errors.username ? styles.inputError : ''}`}>
-              {(errors.username?.message as any) || 'Error'}
+              {(errors.username?.message as string) || 'Error'}
             </span>
             <div className={styles.inputBtnContainer}>
               <div className={styles.empty} />
@@ -79,7 +62,7 @@ const Login: FC<ChildrenNever> = () => {
           </label>
           <label htmlFor="loginPassword" className={styles.label}>
             <span className={`${styles.inputErrorDefault} ${errors.password ? styles.inputError : ''}`}>
-              {(errors.password?.message as any) || 'Error'}
+              {(errors.password?.message as string) || 'Error'}
             </span>
             <div className={styles.inputBtnContainer}>
               <div className={styles.empty} />
@@ -102,7 +85,7 @@ const Login: FC<ChildrenNever> = () => {
             </div>
           </label>
           <div className={styles.btnContainer}>
-            <Button type="submit" disabled={isLoginLoading} className={styles.signIn}>
+            <Button type="submit" disabled={false} className={styles.signIn}>
               Sign In
             </Button>
           </div>

@@ -7,7 +7,6 @@ import space from '@Backgrounds/space.webp';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Avatar } from '@Components/Avatar/Avatar';
 import { Button } from '@Components/Button/Button';
-import { useTypedSelector } from '@Hooks';
 
 import styles from './welcome.module.css';
 
@@ -16,7 +15,7 @@ interface Props extends ChildrenNever {
 }
 
 const Welcome: FC<Props> = ({ handleWelcomeClose }: Props) => {
-  const username = useTypedSelector((state) => state.user.currentUser.username);
+  const username = '';
 
   const { t } = useTranslation('welcome');
   const navigate = useNavigate();

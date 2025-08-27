@@ -1,22 +1,15 @@
 import React, { FC, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes, faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faCheck, faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
-import {
-  deleteToDoItem,
-  changeActiveToDoPage,
-  updateToDoItem,
-  deleteToDoItemLocal,
-  updateToDoItemLocal,
-} from '@ToDo/redux/toDoSlice/toDoSlice';
 import { Button } from '@Components/Button/Button';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
 import styles from './toDoItem.module.css';
+import useToDoStore from '@ToDo/stores/toDo.store';
 
 interface Props extends ChildrenNever {
   id: string;
@@ -26,18 +19,23 @@ function isLoggedIn() {
   return false;
 }
 
+// eslint-disable-next-line react/display-name
 const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
-  const toDoItem = useTypedSelector(
-    (state) => state.toDo.toDoList[state.toDo.toDoList.findIndex((el) => el.id === id)],
+  const toDoItem = useToDoStore(
+    (state) => state.toDoList[state.toDoList.findIndex((el) => el.id === id)],
   );
+  const changeActiveToDoPage = useToDoStore((state) => state.changeActiveToDoPage);
+  const deleteToDoItem = useToDoStore((state) => state.deleteToDoItem);
+  const deleteToDoItemLocal = useToDoStore((state) => state.deleteToDoItemLocal);
+  const updateToDoItem = useToDoStore((state) => state.updateToDoItem);
+  const updateToDoItemLocal = useToDoStore((state) => state.updateToDoItemLocal);
 
   const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
 
   const { t } = useTranslation('toDo');
-  const dispatch = useTypedDispatch();
 
   function handleChangeActiveToDoPage() {
-    dispatch(changeActiveToDoPage(id));
+    changeActiveToDoPage(id);
   }
 
   function toggleIsDescriptionCollapsed() {
@@ -46,27 +44,23 @@ const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
 
   function handleDeleteItem() {
     if (isLoggedIn()) {
-      dispatch(deleteToDoItem(id) as any);
+      deleteToDoItem(id);
     } else {
-      dispatch(deleteToDoItemLocal(id));
+      deleteToDoItemLocal(id);
     }
   }
 
   function handleToggleToDoItem() {
     if (isLoggedIn()) {
-      dispatch(
-        updateToDoItem({
-          ...toDoItem,
-          isComplete: !toDoItem.isComplete,
-        }) as any,
-      );
+      updateToDoItem({
+        ...toDoItem,
+        isComplete: !toDoItem.isComplete,
+      });
     } else {
-      dispatch(
-        updateToDoItemLocal({
-          ...toDoItem,
-          isComplete: !toDoItem.isComplete,
-        }),
-      );
+      updateToDoItemLocal({
+        ...toDoItem,
+        isComplete: !toDoItem.isComplete,
+      });
     }
   }
 
@@ -87,7 +81,7 @@ const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
           onClick={toggleIsDescriptionCollapsed}
           aria-label={t('toggleCollapseDescription')}
         >
-          {isDescriptionCollapsed ? <FontAwesomeIcon icon={faAngleDown} /> : <FontAwesomeIcon icon={faAngleUp} />}
+          {isDescriptionCollapsed ? <FontAwesomeIcon icon={faAngleDown}/> : <FontAwesomeIcon icon={faAngleUp}/>}
         </Button>
         <AnimatePresence initial={false}>
           {!isDescriptionCollapsed && (
@@ -115,14 +109,14 @@ const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
         onClick={handleToggleToDoItem}
         aria-label={`${t('toggleItemWithText')} ${toDoItem.heading}`}
       >
-        {toDoItem.isComplete ? <FontAwesomeIcon icon={faTimes} /> : <FontAwesomeIcon icon={faCheck} />}
+        {toDoItem.isComplete ? <FontAwesomeIcon icon={faTimes}/> : <FontAwesomeIcon icon={faCheck}/>}
       </Button>
       <Button
         className={`${styles.button} ${styles.deleteButton}`}
         onClick={handleDeleteItem}
         aria-label={`${t('deleteItemWithText')} ${toDoItem.heading}`}
       >
-        <FontAwesomeIcon icon={faTrashAlt} />
+        <FontAwesomeIcon icon={faTrashAlt}/>
       </Button>
     </li>
   );

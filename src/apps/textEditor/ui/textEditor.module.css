@@ -1,0 +1,47 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e1e1e;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 12px;
+  background: #2d2d30;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.filename {
+  color: #cccccc;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  padding: 4px 12px;
+  background: #0e639c;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.actions button:disabled {
+  background: #3c3c3c;
+  cursor: not-allowed;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #cccccc;
+}

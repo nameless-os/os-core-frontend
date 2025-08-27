@@ -4,18 +4,21 @@ import { CalculatorNumberButtons } from '@Calculator/components/CalculatorNumber
 import { CalculatorOperationButtons } from '@Calculator/components/CalculatorOperationButtons/CalculatorOperationButtons';
 
 import styles from './calculatorButtons.module.css';
+import { AppInstanceId } from '@nameless-os/sdk';
 
 interface Props {
-  appId: string;
+  instanceId: AppInstanceId;
 }
 
-const CalculatorButtons: FC<Props> = React.memo(({ appId }) => (
+const CalculatorButtons: FC<Props> = React.memo(({ instanceId }) => (
   <div className={styles.wrapper}>
     <div className={styles.buttons}>
-      <CalculatorNumberButtons appId={appId} />
-      <CalculatorOperationButtons appId={appId} />
+      <CalculatorNumberButtons instanceId={instanceId} />
+      <CalculatorOperationButtons instanceId={instanceId} />
     </div>
   </div>
 ));
+
+CalculatorButtons.displayName = 'CalculatorButtons';
 
 export { CalculatorButtons };

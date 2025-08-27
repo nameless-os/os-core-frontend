@@ -3,42 +3,40 @@ import { useTranslation } from 'react-i18next';
 import { faDeleteLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {
-  addToCalculatorInput,
-  clearCalculatorInput,
-  deleteLastCalculatorInputCharacter,
-  getCalculatorResultAndUpdateLastOperations,
-} from '@Calculator/redux/calculatorSlice/calculatorSlice';
-
 import { CalculatorButton } from '@Calculator/components/CalculatorButton/CalculatorButton';
-import { useTypedDispatch } from '@Hooks';
+import { useCalculatorStore } from '../../stores/calculator.store';
 
 import styles from './calculatorOperationButtons.module.css';
+import { AppInstanceId } from '@nameless-os/sdk';
 
 const operationButtons = ['+', '-', '*', '/', '^', '.'];
 
 interface Props {
-  appId: string;
+  instanceId: AppInstanceId;
 }
 
-const CalculatorOperationButtons: FC<Props> = React.memo(({ appId }) => {
-  const dispatch = useTypedDispatch();
+const CalculatorOperationButtons: FC<Props> = React.memo(({ instanceId }) => {
   const { t } = useTranslation('calculator');
 
+  const deleteLastCalculatorInputCharacter = useCalculatorStore((state) => state.deleteLastCalculatorInputCharacter);
+  const clearCalculatorInput = useCalculatorStore((state) => state.clearCalculatorInput);
+  const getCalculatorResultAndUpdateLastOperations = useCalculatorStore((state) => state.getCalculatorResultAndUpdateLastOperations);
+  const addToCalculatorInput = useCalculatorStore((state) => state.addToCalculatorInput);
+
   function handleDeleteLastCharacter() {
-    dispatch(deleteLastCalculatorInputCharacter(appId));
+    deleteLastCalculatorInputCharacter(instanceId);
   }
 
   function handleClearInput() {
-    dispatch(clearCalculatorInput(appId));
+    clearCalculatorInput(instanceId);
   }
 
   function handleSubmit() {
-    dispatch(getCalculatorResultAndUpdateLastOperations(appId));
+    getCalculatorResultAndUpdateLastOperations(instanceId);
   }
 
   function handleAddValueToInput(value: string) {
-    dispatch(addToCalculatorInput({ inputValue: value, appId }));
+    addToCalculatorInput({ inputValue: value, instanceId });
   }
 
   return (
@@ -66,5 +64,7 @@ const CalculatorOperationButtons: FC<Props> = React.memo(({ appId }) => {
     </div>
   );
 });
+
+CalculatorOperationButtons.displayName = 'CalculatorOperationButtons';
 
 export { CalculatorOperationButtons };

@@ -4,8 +4,11 @@
   "theme": "Theme",
   "reset": "Reset",
   "languages": {
-    "English": "English",
-    "Russian": "Russian"
+    "en": "English",
+    "ru": "Russian",
+    "es": "Spanish",
+    "ja": "Japanese",
+    "ko": "Korean"
   },
   "backgrounds": {
     "Planet": "Planet",

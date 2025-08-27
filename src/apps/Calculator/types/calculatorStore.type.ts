@@ -1,4 +1,4 @@
-import { AppId } from '@webos-project/common';
+import { AppInstanceId } from '@nameless-os/sdk';
 
 interface CalculatorState {
   inputValue: string;
@@ -6,17 +6,17 @@ interface CalculatorState {
 }
 
 interface CalculatorStore {
-  calculatorsData: { [key: AppId]: CalculatorState };
+  calculatorsData: { [key: AppInstanceId]: CalculatorState };
 }
 
 interface SetCalculatorInputProps {
   inputValue: string;
-  appId: AppId;
+  instanceId: AppInstanceId;
 }
 
 interface AddToCalculatorInput {
   inputValue: string;
-  appId: AppId;
+  instanceId: AppInstanceId;
 }
 
 export type { CalculatorStore, CalculatorState, SetCalculatorInputProps, AddToCalculatorInput };

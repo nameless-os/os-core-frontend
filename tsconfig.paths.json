@@ -14,15 +14,14 @@
       "@Icons/*": ["./src/assets/images/icons/*"],
       "@Sounds/*": ["./src/assets/sounds/*"],
       "@Apps/*": ["./src/apps/*"],
-      "@Chat/*": ["./src/apps/Chat/*"],
-      "@Calculator/*": ["./src/apps/Calculator/*"],
-      "@Minesweeper/*": ["./src/apps/Minesweeper/*"],
-      "@ToDo/*": ["./src/apps/ToDo/*"],
-      "@Translate/*": ["./src/apps/Translate/*"],
-      "@Simon/*": ["./src/apps/Simon/*"],
-      "@Settings/*": ["./src/apps/Settings/*"],
-      "@Terminal/*": ["./src/apps/Terminal/*"],
-      "@BullsAndCows": ["./src/apps/BullsAndCows"],
+      "@Chat/*": ["./src/apps/chat/*"],
+      "@Calculator/*": ["./src/apps/calculator/*"],
+      "@Minesweeper/*": ["./src/apps/minesweeper/*"],
+      "@ToDo/*": ["./src/apps/toDo/*"],
+      "@Translate/*": ["./src/apps/translate/*"],
+      "@Simon/*": ["./src/apps/simon/*"],
+      "@Settings/*": ["./src/apps/settings/*"],
+      "@BullsAndCows": ["./src/apps/bullsAndCows"],
       "@Assets/*": ["./src/assets/*"]
     }
   }

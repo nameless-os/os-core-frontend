@@ -1,8 +1,6 @@
 .window {
   position: absolute;
   z-index: 10;
-
-  border: 3px solid #343030;
 }
 
 .windowTop {
@@ -15,12 +13,11 @@
 
   border-bottom: 2px solid #353535;
   background-color: var(--windowTopBackground);
+  transition: filter 0.2s ease;
 }
 
 .windowBody {
   position: relative;
-
-  height: calc(100% - 30px);
 
   background-color: var(--windowBodyBackground);
   outline: none;
@@ -71,4 +68,9 @@
 
 .grabbed {
   cursor: grabbing;
+}
+
+.inactive {
+  background-color: var(--windowTopBackgroundInactive);
+  filter: grayscale(0.5) brightness(0.7);
 }

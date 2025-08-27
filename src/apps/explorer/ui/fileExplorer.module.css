@@ -1,0 +1,511 @@
+.fileExplorer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--layoutBackgroundColor, #131313);
+  color: var(--fontColor, #ececec);
+  font-family: 'Nunito', sans-serif;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: var(--windowTopBackground, rgba(23, 23, 24, 0.97));
+  border-bottom: 1px solid var(--secondaryColor, #282828);
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.navButtons {
+  display: flex;
+  gap: 4px;
+}
+
+.navBtn, .actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--secondaryColor, #282828);
+  border: none;
+  border-radius: 4px;
+  color: var(--fontColor, #ececec);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtn svg, .actionBtn svg {
+  width: 16px;
+  font-size: 16px;
+}
+
+.navBtn:hover:not(:disabled), .actionBtn:hover:not(:disabled) {
+  background: var(--onHoverBottomTab, #717272);
+}
+
+.navBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.addressBar {
+  flex: 1;
+  margin: 0 12px;
+}
+
+.pathInput {
+  width: 100%;
+  padding: 6px 12px;
+  background: var(--windowBodyBackground, rgb(23, 23, 24));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 4px;
+  color: var(--fontColor, #ececec);
+  font-size: 14px;
+}
+
+.pathInput:focus {
+  outline: none;
+  border-color: var(--bottomTabBorder, #c1c3c1);
+}
+
+.actionButtons {
+  display: flex;
+  gap: 4px;
+}
+
+.themeSelector {
+  margin-left: 12px;
+}
+
+.themeSelect {
+  padding: 4px 8px;
+  background: var(--secondaryColor, #282828);
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 4px;
+  color: var(--fontColor, #ececec);
+  font-size: 12px;
+}
+
+/* Status Bar */
+.statusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 12px;
+  background-color: var(--secondaryColor, #282828);
+  border-bottom: 1px solid var(--secondaryColor, #282828);
+  font-size: 12px;
+}
+
+.statusBar.error {
+  background-color: #722f37;
+  color: #f8d7da;
+}
+
+.closeError {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 2px;
+}
+
+.closeError svg {
+  width: 14px;
+  font-size: 14px;
+}
+
+.closeError:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* File List */
+.fileListContainer {
+  flex: 1;
+  overflow: auto;
+  background-color: var(--windowBodyBackground, rgb(23, 23, 24));
+  position: relative;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  color: var(--fontColor, #ececec);
+}
+
+.fileList {
+  display: flex;
+  flex-direction: column;
+}
+
+.fileListHeader {
+  display: grid;
+  grid-template-columns: 1fr 120px 180px;
+  gap: 12px;
+  padding: 8px 12px;
+  background-color: var(--secondaryColor, #282828);
+  border-bottom: 1px solid var(--secondaryColor, #282828);
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fileItem {
+  display: grid;
+  grid-template-columns: 1fr 120px 180px;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.fileItem:hover {
+  background-color: var(--onHoverBottomTab, #717272);
+}
+
+.fileItem.selected {
+  background-color: var(--activeBottomTab, #272827);
+}
+
+.itemName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.fileIcon {
+  flex-shrink: 0;
+  width: 16px;
+  font-size: 16px;
+}
+
+.fileIcon.folder {
+  color: #4a9eff;
+}
+
+.fileIcon.file {
+  color: var(--fontColor, #ececec);
+}
+
+.itemText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemSize, .itemDate {
+  font-size: 12px;
+  color: rgba(var(--fontColor-rgb, 236, 236, 236), 0.7);
+}
+
+/* Context Menu */
+.contextMenu {
+  background: var(--windowTopBackground, rgba(23, 23, 24, 0.97));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 4px;
+  padding: 4px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 150px;
+}
+
+.contextItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.contextItem svg {
+  width: 14px;
+  font-size: 14px;
+}
+
+.contextItem:hover {
+  background-color: var(--onHoverBottomTab, #717272);
+}
+
+.contextSeparator {
+  height: 1px;
+  background-color: var(--secondaryColor, #282828);
+  margin: 4px 0;
+}
+
+/* Dialogs */
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background: var(--windowBodyBackground, rgb(23, 23, 24));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 8px;
+  min-width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.dialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--secondaryColor, #282828);
+}
+
+.dialogHeader h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.dialogClose {
+  background: none;
+  border: none;
+  color: var(--fontColor, #ececec);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.dialogClose svg {
+  width: 16px;
+  font-size: 16px;
+}
+
+.dialogClose:hover {
+  background: var(--secondaryColor, #282828);
+}
+
+.dialogBody {
+  padding: 20px;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.formInput, .formSelect {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--windowTopBackground, rgba(23, 23, 24, 0.97));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 4px;
+  color: var(--fontColor, #ececec);
+  font-size: 14px;
+}
+
+.formInput:focus, .formSelect:focus {
+  outline: none;
+  border-color: var(--bottomTabBorder, #c1c3c1);
+}
+
+.dialogFooter {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--secondaryColor, #282828);
+  justify-content: flex-end;
+}
+
+.btnCancel, .btnCreate {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btnCancel {
+  background: var(--secondaryColor, #282828);
+  color: var(--fontColor, #ececec);
+}
+
+.btnCancel:hover {
+  background: var(--onHoverBottomTab, #717272);
+}
+
+.btnCreate {
+  background: #0066cc;
+  color: white;
+}
+
+.btnCreate:hover:not(:disabled) {
+  background: #0052a3;
+}
+
+.btnCreate:disabled {
+  background: var(--secondaryColor, #282828);
+  color: rgba(var(--fontColor-rgb, 236, 236, 236), 0.5);
+  cursor: not-allowed;
+}
+
+/* Theme-specific adjustments */
+.lightTheme .fileIcon.folder {
+  color: #0078d4;
+}
+
+.blueTheme .fileIcon.folder {
+  color: #87ceeb;
+}
+
+.greenTheme .fileIcon.folder {
+  color: #90ee90;
+}
+
+.dragDropOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 123, 255, 0.1);
+  border: 2px dashed #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+.dragDropContent {
+  text-align: center;
+  pointer-events: none;
+}
+
+.dragDropIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.dragDropText {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #007bff;
+}
+
+.dragDropSubtext {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Upload Progress */
+.uploadProgress {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--windowBodyBackground, rgb(23, 23, 24));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 8px;
+  min-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 200;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.uploadHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--secondaryColor, #282828);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.uploadClose {
+  background: none;
+  border: none;
+  color: var(--fontColor, #ececec);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.uploadClose:hover {
+  background: var(--secondaryColor, #282828);
+}
+
+.uploadItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+}
+
+.uploadItem:last-child {
+  border-bottom: none;
+}
+
+.uploadInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.uploadName {
+  font-size: 13px;
+  color: var(--fontColor, #ececec);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.uploadStatus {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.uploadStatus.uploading {
+  color: #ffc107;
+}
+
+.uploadStatus.completed {
+  color: #28a745;
+}
+
+.uploadStatus.error {
+  color: #dc3545;
+}
+
+.uploadError {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #dc3545;
+  font-style: italic;
+}

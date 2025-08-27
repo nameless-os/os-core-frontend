@@ -1,37 +1,41 @@
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { changeDifficulty, restartGame, updateStatus } from '@Simon/redux/simonSlice/simonSlice';
 import 'src/features/i18n';
 import { SimonDifficulty as Difficulty } from '../../enums/simonDifficulty.enum';
 import { SimonStatus } from '@Simon/enums/simonStatus.enum';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Button } from '@Components/Button/Button';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
 import styles from './simonBar.module.css';
+import { AppInstanceId } from '@nameless-os/sdk';
+import { useSimonStore } from '@Simon/stores/simon.store';
 
 interface Props extends ChildrenNever {
   difficulty: Difficulty;
+  instanceId: AppInstanceId;
 }
 
-export const SimonBar: FC<Props> = React.memo(({ difficulty }: Props) => {
-  const status = useTypedSelector((store) => store.simon.simonStatus);
-  const level = useTypedSelector((store) => store.simon.level);
+// eslint-disable-next-line react/display-name,react/prop-types
+export const SimonBar: FC<Props> = React.memo(({ difficulty, instanceId }) => {
+  const status = useSimonStore((store) => store.get(instanceId)!.simonStatus);
+  const level = useSimonStore((store) => store.get(instanceId)!.level);
+  const changeDifficulty = useSimonStore((store) => store.changeDifficulty);
+  const restartGame = useSimonStore((store) => store.restartGame);
+  const updateStatus = useSimonStore((store) => store.updateStatus);
 
-  const dispatch = useTypedDispatch();
   const { t } = useTranslation('simon');
 
   function startGame() {
-    dispatch(updateStatus({ status: SimonStatus.Showing }));
+    updateStatus(instanceId, SimonStatus.Showing);
   }
 
   function handleRestartGame() {
-    dispatch(restartGame());
+    restartGame(instanceId);
   }
 
   function handleChangeDifficulty() {
-    dispatch(changeDifficulty({ difficulty: Difficulty.None }));
+    changeDifficulty(instanceId, Difficulty.None);
   }
 
   return (

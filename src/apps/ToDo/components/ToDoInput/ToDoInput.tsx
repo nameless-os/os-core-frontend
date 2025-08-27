@@ -6,27 +6,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
-import { addToDoItem, addToDoItemLocal } from '@ToDo/redux/toDoSlice/toDoSlice';
 import { Button } from '@Components/Button/Button';
-import { useTypedDispatch } from '@Hooks';
 
 import styles from './ToDoInput.module.css';
+import useToDoStore from '@ToDo/stores/toDo.store';
 
 function isLoggedIn() {
   return false;
 }
 
+// eslint-disable-next-line react/display-name
 const ToDoInput: FC<ChildrenNever> = React.memo(() => {
-  const dispatch = useTypedDispatch();
+  const addToDoItem = useToDoStore((state) => state.addToDoItem);
+  const addToDoItemLocal = useToDoStore((state) => state.addToDoItemLocal);
+
   const { t } = useTranslation('toDo');
   const { register, getValues, handleSubmit, formState, reset, setFocus } = useForm();
 
   function handleAddToDo() {
     if (isLoggedIn()) {
-      dispatch(addToDoItem(getValues('addToDo')) as any);
+      addToDoItem(getValues('addToDo'));
       return reset();
     }
-    dispatch(addToDoItemLocal(getValues('addToDo')));
+    addToDoItemLocal(getValues('addToDo'));
     return reset();
   }
 

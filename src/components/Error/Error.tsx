@@ -20,4 +20,6 @@ const Error: FC<Props> = React.memo(({ refetch }: Props) => (
   </div>
 ));
 
+Error.displayName = 'Error';
+
 export { Error };

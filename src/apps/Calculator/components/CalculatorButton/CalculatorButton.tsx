@@ -17,4 +17,6 @@ const CalculatorButton: FC<Props> = React.memo(({ value, handleClick, label }: P
   </Button>
 ));
 
+CalculatorButton.displayName = 'CalculatorButton';
+
 export { CalculatorButton };

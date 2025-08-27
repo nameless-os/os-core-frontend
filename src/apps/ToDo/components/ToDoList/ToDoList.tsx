@@ -1,22 +1,21 @@
 import React, { FC, useEffect, useRef } from 'react';
 
-import { getToDoItems } from '@ToDo/redux/toDoSlice/toDoSlice';
 import { ChildrenNever } from '@Interfaces/childrenNever.interface';
 import { Error } from '@Components/Error/Error';
 import { Loading } from '@Components/Loading/Loading';
 import { ToDoItem } from '@ToDo/components/ToDoItem/ToDoItem';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
 
 import styles from './toDoList.module.css';
+import useToDoStore from '@ToDo/stores/toDo.store';
 
+// eslint-disable-next-line react/display-name
 const ToDoList: FC<ChildrenNever> = React.memo(() => {
-  const toDoList = useTypedSelector((state) => state.toDo.toDoList);
-  const isLoading = useTypedSelector((state) => state.toDo.isToDoListLoading);
-  const error = useTypedSelector((state) => state.toDo.toDoListError);
+  const toDoList = useToDoStore((state) => state.toDoList);
+  const isLoading = useToDoStore((state) => state.isToDoListLoading);
+  const error = useToDoStore((state) => state.toDoListError);
+  const getToDoItems = useToDoStore((state) => state.getToDoItems);
 
   const listRef = useRef<HTMLUListElement>(null);
-
-  const dispatch = useTypedDispatch();
 
   useEffect(() => {
     if (!listRef.current) return;
@@ -34,7 +33,7 @@ const ToDoList: FC<ChildrenNever> = React.memo(() => {
   if (error !== '') {
     return (
       <div className={styles.container}>
-        <Error refetch={() => dispatch(getToDoItems() as any)}/>
+        <Error refetch={getToDoItems}/>
       </div>
     );
   }

@@ -8,7 +8,7 @@ import { Button } from '@Components/Button/Button';
 import styles from './fullscreenButton.module.css';
 
 export const FullscreenButton: FC<ChildrenNever> = () => {
-  const [isFullscreen, setIsFullscreen] = useState<Boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useLayoutEffect(() => {
     const toggleFullscreen = () => {

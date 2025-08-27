@@ -1,34 +1,35 @@
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  getCalculatorResultAndUpdateLastOperations,
-  setCalculatorInput,
-} from '@Calculator/redux/calculatorSlice/calculatorSlice';
-import { useTypedDispatch, useTypedSelector } from '@Hooks';
-
 import styles from './calculatorInput.module.css';
+import { AppInstanceId } from '@nameless-os/sdk';
+import { useCalculatorStore } from '../../stores/calculator.store';
 
 interface Props {
-  appId: string;
+  instanceId: AppInstanceId;
 }
 
-const CalculatorInput: FC<Props> = ({ appId }) => {
-  const inputValue = useTypedSelector((state) => state.calculator.calculatorsData[appId].inputValue);
-
-  const dispatch = useTypedDispatch();
+const CalculatorInput: FC<Props> = ({ instanceId }) => {
   const { t } = useTranslation('calculator');
+
+  const calculatorData = useCalculatorStore((state) => state.get(instanceId));
+  const setCalculatorInput = useCalculatorStore((state) => state.setCalculatorInput);
+  const getCalculatorResultAndUpdateLastOperations = useCalculatorStore(
+    (state) => state.getCalculatorResultAndUpdateLastOperations
+  );
+
+  const inputValue = calculatorData?.inputValue || '';
 
   function handleChangeInput(event: React.ChangeEvent<HTMLInputElement>) {
     const numbersAndOperatorsRegExp = new RegExp(/^[\d+\-*^./\s]*$/);
     if (numbersAndOperatorsRegExp.test(event.target.value)) {
-      dispatch(setCalculatorInput({ inputValue: event.target.value, appId }));
+      setCalculatorInput({ inputValue: event.target.value, instanceId });
     }
   }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    dispatch(getCalculatorResultAndUpdateLastOperations(appId));
+    getCalculatorResultAndUpdateLastOperations(instanceId);
   }
 
   return (
