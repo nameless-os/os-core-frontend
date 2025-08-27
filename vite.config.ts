@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     tsconfigPaths({
-      projects: ['./tsconfig.paths.json'], // <--- укажи явно
+      projects: ['./tsconfig.paths.json'],
     }),
   ],
   build: {
