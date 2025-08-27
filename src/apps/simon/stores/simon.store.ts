@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { SimonStatus } from '@Simon/enums/simonStatus.enum';
-import { generatePattern, regeneratePattern, updatePattern } from 'src/apps/Simon/logic';
+import { generatePattern, regeneratePattern, updatePattern } from '@Simon/logic';
 import { SimonDifficulty as Difficulty } from '@Simon/enums/simonDifficulty.enum';
 import { AppInstanceId } from '@nameless-os/sdk';
 
