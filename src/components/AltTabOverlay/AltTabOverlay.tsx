@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import html2canvas from 'html2canvas';
-import styles from './alttab.module.css';
+import styles from './altTab.module.css';
 import { Nullable, WindowId, WindowProps } from '@nameless-os/sdk';
 import { systemApi } from '../../index';
 
