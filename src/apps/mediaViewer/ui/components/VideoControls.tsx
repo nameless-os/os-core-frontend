@@ -4,7 +4,7 @@ import {
   faPlay, faPause, faExpand, faCompress,
   faVolumeHigh, faVolumeXmark
 } from '@fortawesome/free-solid-svg-icons';
-import styles from '../MediaViewer.module.css';
+import styles from '../mediaViewer.module.css';
 import { VideoState } from '../../types/mediaTypes';
 import { formatTime } from '../../utils/mediaUtils';
 
