@@ -1,6 +1,6 @@
 {
   "name": "nameless-os-frontend-core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.27.0",

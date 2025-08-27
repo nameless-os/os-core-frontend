@@ -18,6 +18,8 @@ function registerTerminalApp(systemApi: CoreAPI) {
         component: () => <Terminal appId={instanceId}/>,
       });
       useTerminalStore.getState().init(instanceId);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       systemApi.achievement.updateProgress('terminal_first_use', 1);
     },
   });

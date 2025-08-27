@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import styles from './MediaViewer.module.css';
+import styles from './mediaViewer.module.css';
 import { MediaViewerProps } from '../types/mediaTypes';
 import { getFileName } from '../utils/mediaUtils';
 import { useMediaLoader } from '../hooks/useMediaLoader';
