@@ -22,7 +22,7 @@ import { AltTabOverlay } from '@Components/AltTabOverlay/AltTabOverlay';
 import { Toaster } from 'sonner';
 import { systemApi } from '../../index';
 import { useBackground } from '@Settings/stores/settings.store';
-import { WindowId } from '@nameless-os/sdk';
+import { AppInstanceId, WindowId } from '@nameless-os/sdk';
 
 const Main: FC<ChildrenNever> = () => {
   const backgroundImage = useBackground();
@@ -88,8 +88,9 @@ const Main: FC<ChildrenNever> = () => {
     setIsWelcomeOpen(false);
     sessionStorage.setItem('isWelcomeOpen', 'No');
     setTimeout(() => {
-      systemApi.sound.playUrl('/assets/sounds/startup.mp3', {
+      return systemApi.sound.playUrl('/assets/sounds/startup.mp3', {
         volume: 0.3,
+        appId: undefined as unknown as AppInstanceId,
       });
     }, 1000);
   }, []);
