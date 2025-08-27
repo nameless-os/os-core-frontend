@@ -19,11 +19,11 @@ import terminalTranslationRu from '@Apps/terminal/translations/ru/terminalTransl
 import authRedirectTranslationRu from '@Components/AuthAppRedirect/translations/ru/authAppRedirectTranslation.json';
 import welcomeTranslationRu from '@Components/Welcome/translations/ru/welcomeTranslation.json';
 
-import settingsTranslationKo from '@Apps/Settings/translations/ko/settingsTranslation.json';
+import settingsTranslationKo from '@Settings/translations/ko/settingsTranslation.json';
 
-import settingsTranslationJa from '@Apps/Settings/translations/ja/settingsTranslation.json';
+import settingsTranslationJa from '@Settings/translations/ja/settingsTranslation.json';
 
-import settingsTranslationEs from '@Apps/Settings/translations/es/settingsTranslation.json';
+import settingsTranslationEs from '@Settings/translations/es/settingsTranslation.json';
 
 import { Language } from '@Features/i18n/types/language';
 
