@@ -1,0 +1,4 @@
+.container {
+  height: calc(100% - 50px);
+  overflow-y: auto;
+}
