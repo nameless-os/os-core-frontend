@@ -19,6 +19,19 @@ function isLoggedIn() {
   return false;
 }
 
+// Функция для получения preview описания
+function getDescriptionPreview(description: string, maxLength: number = 100): string {
+  if (description.length <= maxLength) return description;
+
+  // Ищем последний пробел в пределах maxLength, чтобы не обрезать слово
+  const truncated = description.substring(0, maxLength);
+  const lastSpaceIndex = truncated.lastIndexOf(' ');
+
+  return lastSpaceIndex > 0
+    ? truncated.substring(0, lastSpaceIndex) + '...'
+    : truncated + '...';
+}
+
 // eslint-disable-next-line react/display-name
 const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
   const toDoItem = useToDoStore(
@@ -64,60 +77,132 @@ const ToDoItem: FC<Props> = React.memo(({ id }: Props) => {
     }
   }
 
+  const hasDescription = Boolean(toDoItem.description?.trim());
+  const isLongDescription = toDoItem.description && toDoItem.description.length > 100;
+  const descriptionPreview = toDoItem.description ? getDescriptionPreview(toDoItem.description) : '';
+  const showFullDescription = !isDescriptionCollapsed && hasDescription;
+  const showPreviewOnly = isDescriptionCollapsed && hasDescription;
+
   return (
-    <li className={styles.toDoItem} data-cy="todo-item">
-      <motion.div className={styles.text} initial={{ y: 50, opacity: 0.2 }} animate={{ y: 0, opacity: 1 }}>
-        <Button
-          onClick={handleChangeActiveToDoPage}
-          className={classNames(styles.textButton, {
-            [styles.completed]: toDoItem.isComplete,
-          })}
-          aria-label={t('goToToDoEditPage')}
-        >
-          {toDoItem.heading}
-        </Button>
-        <Button
-          className={styles.collapseButton}
-          onClick={toggleIsDescriptionCollapsed}
-          aria-label={t('toggleCollapseDescription')}
-        >
-          {isDescriptionCollapsed ? <FontAwesomeIcon icon={faAngleDown}/> : <FontAwesomeIcon icon={faAngleUp}/>}
-        </Button>
+    <li
+      className={classNames(styles.toDoItem, {
+        [styles.completed]: toDoItem.isComplete,
+        [styles.hasDescription]: hasDescription,
+      })}
+      data-cy="todo-item"
+    >
+      <motion.div
+        className={styles.text}
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      >
+        <div className={styles.textRow}>
+          <Button
+            onClick={handleChangeActiveToDoPage}
+            className={classNames(styles.textButton, {
+              [styles.completed]: toDoItem.isComplete,
+            })}
+            aria-label={t('goToToDoEditPage')}
+          >
+            {toDoItem.heading}
+          </Button>
+
+          {hasDescription && (
+            <Button
+              className={classNames(styles.collapseButton, {
+                [styles.expanded]: !isDescriptionCollapsed,
+                [styles.hasLongDescription]: isLongDescription,
+              })}
+              onClick={toggleIsDescriptionCollapsed}
+              aria-label={t('toggleCollapseDescription')}
+            >
+              <FontAwesomeIcon
+                icon={isDescriptionCollapsed ? faAngleDown : faAngleUp}
+              />
+            </Button>
+          )}
+        </div>
+
+        {/* Preview описания в свернутом виде */}
+        {showPreviewOnly && (
+          <motion.div
+            className={styles.descriptionPreview}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {descriptionPreview}
+            {isLongDescription && (
+              <span className={styles.expandHint}>
+                {' '}
+                <Button
+                  className={styles.expandButton}
+                  onClick={toggleIsDescriptionCollapsed}
+                  aria-label={t('expandDescription')}
+                >
+                  читать далее
+                </Button>
+              </span>
+            )}
+          </motion.div>
+        )}
+
+        {/* Полное описание в развернутом виде */}
         <AnimatePresence initial={false}>
-          {!isDescriptionCollapsed && (
-            <motion.p
+          {showFullDescription && (
+            <motion.div
               className={styles.description}
               initial="collapsed"
               animate="open"
               exit="collapsed"
               variants={{
-                open: { opacity: 1, height: 'auto' },
-                collapsed: { opacity: 0, height: 0 },
+                open: {
+                  opacity: 1,
+                  height: 'auto',
+                  marginTop: '0.5rem'
+                },
+                collapsed: {
+                  opacity: 0,
+                  height: 0,
+                  marginTop: 0
+                },
               }}
-              transition={{ duration: 0.4 }}
+              transition={{
+                duration: 0.3,
+                ease: "easeInOut",
+                opacity: { duration: 0.2 }
+              }}
             >
               {toDoItem.description}
-            </motion.p>
+            </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
-      <Button
-        className={classNames(styles.button, {
-          [styles.checkButton]: !toDoItem.isComplete,
-          [styles.uncheckButton]: toDoItem.isComplete,
-        })}
-        onClick={handleToggleToDoItem}
-        aria-label={`${t('toggleItemWithText')} ${toDoItem.heading}`}
-      >
-        {toDoItem.isComplete ? <FontAwesomeIcon icon={faTimes}/> : <FontAwesomeIcon icon={faCheck}/>}
-      </Button>
-      <Button
-        className={`${styles.button} ${styles.deleteButton}`}
-        onClick={handleDeleteItem}
-        aria-label={`${t('deleteItemWithText')} ${toDoItem.heading}`}
-      >
-        <FontAwesomeIcon icon={faTrashAlt}/>
-      </Button>
+
+      <div className={styles.actionsContainer}>
+        <Button
+          className={classNames(styles.button, {
+            [styles.checkButton]: !toDoItem.isComplete,
+            [styles.uncheckButton]: toDoItem.isComplete,
+          })}
+          onClick={handleToggleToDoItem}
+          aria-label={`${t('toggleItemWithText')} ${toDoItem.heading}`}
+        >
+          <FontAwesomeIcon
+            icon={toDoItem.isComplete ? faTimes : faCheck}
+          />
+        </Button>
+
+        <Button
+          className={`${styles.button} ${styles.deleteButton}`}
+          onClick={handleDeleteItem}
+          aria-label={`${t('deleteItemWithText')} ${toDoItem.heading}`}
+        >
+          <FontAwesomeIcon icon={faTrashAlt} />
+        </Button>
+      </div>
     </li>
   );
 });

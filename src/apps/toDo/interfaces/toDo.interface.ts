@@ -5,4 +5,8 @@ export interface ToDoItem {
   description: string;
   updatedAt?: string;
   createAt?: string;
+  priority?: 'low' | 'medium' | 'high';
+  category?: string;
+  dueDate?: string;
+  tags?: string[];
 }

@@ -14,6 +14,7 @@ import { registerTranslateApp } from '@Translate/registerTranslateApp';
 import { registerSimonApp } from '@Simon/registerSimonApp';
 import { registerTextEditorApp } from '@Apps/textEditor/registerTextEditorApp';
 import { registerMediaViewerApp } from '@Apps/mediaViewer/registerMediaViewerApp';
+import { registerJSDosApp } from '@Apps/js-dos/registerJsDos';
 
 export function registerBaseApps(systemApi: CoreAPI) {
   registerTerminalApp(systemApi);
@@ -29,6 +30,7 @@ export function registerBaseApps(systemApi: CoreAPI) {
   registerSimonApp(systemApi);
   registerTextEditorApp(systemApi);
   registerMediaViewerApp(systemApi);
+  registerJSDosApp(systemApi);
   initTerminalAchievements(systemApi);
 }
 

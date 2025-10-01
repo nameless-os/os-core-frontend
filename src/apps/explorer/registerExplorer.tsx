@@ -1,10 +1,10 @@
-import { AppInstanceId, CoreAPI, createPersistentAppTypeId } from '@nameless-os/sdk';
+import { AppInstanceId, CoreAPI, createPersistentAppTypeId, registerExternalApp } from '@nameless-os/sdk';
 import { FileExplorer } from '@Apps/explorer/ui/FileExplorer';
 
 const PERSISTENT_APP_TYPE_ID = createPersistentAppTypeId('explorer');
 
 function registerExplorerApp(systemApi: CoreAPI) {
-  return systemApi.app.registerApp({
+  const { appId } = registerExternalApp({
     name: 'Explorer',
     persistentAppTypeId: PERSISTENT_APP_TYPE_ID,
     icon: '/assets/images/icons/explorer.svg',
@@ -17,6 +17,8 @@ function registerExplorerApp(systemApi: CoreAPI) {
       });
     },
   });
+
+  return appId;
 }
 
 export { registerExplorerApp };

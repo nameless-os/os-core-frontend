@@ -5,10 +5,12 @@
   "reset": "Reset",
   "languages": {
     "en": "English",
-    "ru": "Russian",
-    "es": "Spanish",
-    "ja": "Japanese",
-    "ko": "Korean"
+    "ru": "Русский",
+    "es": "Español",
+    "ja": "日本語",
+    "ko": "한국어",
+    "th": "ไทย",
+    "vi": "Tiếng Việt"
   },
   "backgrounds": {
     "Planet": "Planet",
@@ -20,7 +22,9 @@
     "Dynamic": "Rain (dynamic)",
     "Dynamic2": "Rain 2 (dynamic)",
     "House": "House (dynamic)",
-    "Waterfall": "Waterfall (dynamic)"
+    "Waterfall": "Waterfall (dynamic)",
+    "CustomUrl": "Custom Url",
+    "CustomImage": "Custom Image"
   },
   "themes": {
     "Dark": "Dark",

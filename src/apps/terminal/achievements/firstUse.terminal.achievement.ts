@@ -5,7 +5,7 @@ export function initFirstUseTerminalAchievement(systemApi: CoreAPI) {
     id: 'terminal_first_use',
     name: 'First Terminal User',
     description: 'Successfully opened and used the terminal for the first time',
-    icon: '🖥️',
+    icon: 'assets/images/icons/terminal.svg',
     category: 'system',
     rarity: 'common',
     type: 'conditional',

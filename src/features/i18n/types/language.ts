@@ -4,4 +4,6 @@ export enum Language {
   Japanese = 'ja',
   Korean = 'ko',
   Spanish = 'es',
+  Thai = 'th',
+  Vietnamese = 'vi',
 }

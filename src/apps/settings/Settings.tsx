@@ -1,7 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SettingsOption } from '@Settings/components/SettingsOption/SettingsOption';
 import { Button } from '@Components/Button/Button';
 import { Background, Theme } from '@Features/settings/enums';
 import { Language } from '@Features/i18n/types/language';
@@ -13,34 +12,27 @@ const languages = Object.values(Language);
 import styles from './settings.module.css';
 import { useBackground, useLanguage, useSettingsStore, useTheme } from '@Settings/stores/settings.store';
 import { AppInstanceId } from '@nameless-os/sdk';
+import { backgroundImagesAssets } from '@Constants/backgroundImages';
 
 const Settings: FC<{ appId: AppInstanceId }> = React.memo(() => {
   const backgroundImage = useBackground();
   const language = useLanguage();
   const theme = useTheme();
   const { setTheme, setBackground, setLanguage } = useSettingsStore();
+  const [activeTab, setActiveTab] = useState<'appearance' | 'system'>('appearance');
 
   const { t } = useTranslation('settings');
 
-  function handleChangeBackground(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedBackgroundImage = event.target.selectedOptions[0].value as Background;
-    if (Object.values(Background).includes(selectedBackgroundImage)) {
-      setBackground(selectedBackgroundImage);
-    }
+  function handleChangeBackground(selectedBackground: Background) {
+    setBackground(selectedBackground);
   }
 
-  function handleChangeLanguage(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedLanguage = event.target.selectedOptions[0].value as Language;
-    if (Object.values(Language).includes(selectedLanguage)) {
-      setLanguage(selectedLanguage);
-    }
+  function handleChangeLanguage(selectedLanguage: Language) {
+    setLanguage(selectedLanguage);
   }
 
-  function handleChangeTheme(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedTheme = event.target.selectedOptions[0].value as Theme;
-    if (Object.values(Theme).includes(selectedTheme)) {
-      setTheme(selectedTheme);
-    }
+  function handleChangeTheme(selectedTheme: Theme) {
+    setTheme(selectedTheme);
   }
 
   function resetSettings() {
@@ -49,55 +41,104 @@ const Settings: FC<{ appId: AppInstanceId }> = React.memo(() => {
   }
 
   return (
-    <>
-      <form className={styles.form}>
-        <div>
-          <label htmlFor="themeSelect" className={styles.label}>
-            {t('wallpaper')}
-            <select
-              id="themeSelect"
-              className={styles.select}
-              onChange={handleChangeBackground}
-              defaultValue={backgroundImage}
-            >
-              {backgroundImages.map((el) => (
-                <SettingsOption value={el} category="backgrounds" key={el}/>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div>
-          <label htmlFor="localeSelect" className={styles.label}>
-            {t('language')}
-            <select
-              id="localeSelect"
-              className={styles.select}
-              onChange={handleChangeLanguage}
-              defaultValue={language}
-            >
-              {languages.map((el) => (
-                <SettingsOption value={el} category="languages" key={el}/>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div>
-          <label htmlFor="themeSelect" className={styles.label}>
-            {t('theme')}
-            <select id="themeSelect" className={styles.select} onChange={handleChangeTheme} defaultValue={theme}>
-              {themes.map((el) => (
-                <SettingsOption value={el} category="themes" key={el}/>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div className={styles.resetContainer}>
-          <Button className={styles.resetBtn} onClick={resetSettings}>
-            {t('reset')}
-          </Button>
-        </div>
-      </form>
-    </>
+    <div className={styles.settingsContainer}>
+      {/* Навигация по табам */}
+      <div className={styles.tabNavigation}>
+        <button
+          className={`${styles.tab} ${activeTab === 'appearance' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('appearance')}
+        >
+          🎨 {t('appearance') || 'Внешний вид'}
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'system' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('system')}
+        >
+          ⚙️ {t('system') || 'Система'}
+        </button>
+      </div>
+      <div className={styles.tabContent}>
+        {activeTab === 'appearance' && (
+          <>
+            {/* Секция обоев */}
+            <div className={styles.section}>
+              <h3 className={styles.sectionTitle}>{t('wallpaper') || 'Обои'}</h3>
+              <div className={styles.wallpaperGrid}>
+                {backgroundImages.map((bg) => (
+                  <div
+                    key={bg}
+                    className={`${styles.wallpaperCard} ${backgroundImage === bg ? styles.selected : ''}`}
+                    onClick={() => handleChangeBackground(bg)}
+                  >
+                    <div className={styles.wallpaperPreview} style={{ backgroundImage: `url(${backgroundImagesAssets[bg]})` }}>
+                      {backgroundImage === bg && <div className={styles.checkmark}>✓</div>}
+                    </div>
+                    <span className={styles.wallpaperName}>{t(`backgrounds.${bg}`) || bg}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Секция темы */}
+            <div className={styles.section}>
+              <h3 className={styles.sectionTitle}>{t('theme') || 'Тема'}</h3>
+              <div className={styles.themeOptions}>
+                {themes.map((themeOption) => (
+                  <div
+                    key={themeOption}
+                    className={`${styles.themeCard} ${theme === themeOption ? styles.selected : ''}`}
+                    onClick={() => handleChangeTheme(themeOption)}
+                  >
+                    <div className={`${styles.themePreview} ${styles[`theme${themeOption}`]}`}>
+                      <div className={`${styles.themeWindow} ${styles[`theme${themeOption}`]}`}></div>
+                      <div className={`${styles.themeTaskbar} ${styles[`theme${themeOption}`]}`}></div>
+                    </div>
+                    <span className={styles.themeName}>{t(`themes.${themeOption}`) || themeOption}</span>
+                    {theme === themeOption && <div className={styles.checkmark}>✓</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {activeTab === 'system' && (
+          <>
+            {/* Секция языка */}
+            <div className={styles.section}>
+              <h3 className={styles.sectionTitle}>{t('language') || 'Язык'}</h3>
+              <div className={styles.languageOptions}>
+                {languages.map((lang) => (
+                  <div
+                    key={lang}
+                    className={`${styles.languageCard} ${language === lang ? styles.selected : ''}`}
+                    onClick={() => handleChangeLanguage(lang)}
+                  >
+                    <span className={styles.languageFlag}>
+                      {lang === Language.English ? '🇺🇸' : lang === Language.Russian ? '🇷🇺' : '🌐'}
+                    </span>
+                    <span className={styles.languageName}>{t(`languages.${lang}`) || lang}</span>
+                    {language === lang && <div className={styles.checkmark}>✓</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={styles.section}>
+              <h3 className={styles.sectionTitle}>{t('system') || 'Система'}</h3>
+              <div className={styles.dangerZone}>
+                <div className={styles.resetInfo}>
+                  <h4>{t('reset') || 'Сбросить настройки'}</h4>
+                  <p>Все настройки будут сброшены до значений по умолчанию</p>
+                </div>
+                <Button className={styles.resetBtn} onClick={resetSettings}>
+                  {t('reset') || 'Сбросить'}
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 });
 

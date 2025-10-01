@@ -4,11 +4,13 @@
   "theme": "テーマ",
   "reset": "リセット",
   "languages": {
-    "en": "英語",
-    "ru": "ロシア語",
-    "es": "スペイン語",
+    "en": "English",
+    "ru": "Русский",
+    "es": "Español",
     "ja": "日本語",
-    "ko": "韓国語"
+    "ko": "한국어",
+    "th": "ไทย",
+    "vi": "Tiếng Việt"
   },
   "backgrounds": {
     "Planet": "惑星",

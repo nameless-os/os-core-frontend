@@ -5,7 +5,7 @@ export function initFirstCommandTerminalAchievement(systemApi: CoreAPI) {
     id: 'terminal_first_command',
     name: 'Command Pioneer',
     description: 'Successfully executed your very first command',
-    icon: '⚡',
+    icon: 'assets/images/icons/terminal.svg',
     category: 'app',
     rarity: 'common',
     type: 'conditional',

@@ -14,7 +14,7 @@ function registerTextEditorApp(systemApi: CoreAPI) {
         title: 'Text Editor',
         appInstanceId: instanceId,
         size: { width: 900, height: 600 },
-        component: () => <TextEditor filePath={data.filePath} />,
+        component: () => <TextEditor filePath={data?.filePath} />,
       });
     },
   });

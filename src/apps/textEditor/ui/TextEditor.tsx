@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Editor from '@monaco-editor/react';
+import { FilePicker } from '@Components/FilePicker/FilePicker';
 import styles from './textEditor.module.css';
 import { systemApi } from '../../../index';
 
 interface FileEditorProps {
-  filePath: string;
+  filePath?: string;
+  onFileChange?: (filePath: string) => void;
 }
 
 class EditorErrorBoundary extends React.Component<
@@ -75,14 +77,60 @@ const safeEditorOperation = (operation: () => any, fallback?: any) => {
   }
 };
 
+// File picker welcome component
+const FilePickerWelcome: React.FC<{
+  onOpenFile: () => void;
+  onCreateNew: () => void;
+}> = ({ onOpenFile, onCreateNew }) => {
+  return (
+    <div className={styles.welcomeContainer}>
+      <div className={styles.welcomeContent}>
+        <h2>Text Editor</h2>
+        <p>Choose an option to get started:</p>
+
+        <div className={styles.actionButtons}>
+          <button
+            className={styles.primaryButton}
+            onClick={onOpenFile}
+          >
+            📂 Open File
+          </button>
+
+          <button
+            className={styles.secondaryButton}
+            onClick={onCreateNew}
+          >
+            📄 Create New File
+          </button>
+        </div>
+
+        <div className={styles.shortcuts}>
+          <p>Keyboard shortcuts:</p>
+          <ul>
+            <li><kbd>Ctrl+O</kbd> - Open file</li>
+            <li><kbd>Ctrl+N</kbd> - New file</li>
+            <li><kbd>Ctrl+S</kbd> - Save file</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // eslint-disable-next-line react/display-name
-const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
+const TextEditor: React.FC<FileEditorProps> = React.memo(({
+                                                            filePath: initialFilePath,
+                                                            onFileChange
+                                                          }) => {
+  const [currentFilePath, setCurrentFilePath] = useState<string | null>(initialFilePath || null);
   const [content, setContent] = useState('');
   const [isDirty, setIsDirty] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [editorReady, setEditorReady] = useState(false);
   const [isWindowActive, setIsWindowActive] = useState(true);
   const [editorKey, setEditorKey] = useState(0);
+  const [showFilePicker, setShowFilePicker] = useState(false);
+  const [filePickerMode, setFilePickerMode] = useState<'open' | 'save'>('open');
 
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
@@ -102,17 +150,30 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
       'tsx': 'typescript',
       'json': 'json',
       'md': 'markdown',
-      'txt': 'plaintext'
+      'txt': 'plaintext',
+      'html': 'html',
+      'css': 'css',
+      'py': 'python',
+      'java': 'java',
+      'cpp': 'cpp',
+      'c': 'c'
     };
     return langMap[ext || ''] || 'plaintext';
   };
 
-  const loadFile = async () => {
+  const loadFile = async (filePath: string) => {
     try {
       setLoading(true);
       const fileContent = await systemApi.fileSystem.readFile(filePath);
       setContent(fileContent);
       contentRef.current = fileContent;
+      setCurrentFilePath(filePath);
+      setIsDirty(false);
+
+      // Notify parent of file change
+      if (onFileChange) {
+        onFileChange(filePath);
+      }
     } catch (error) {
       console.error('Error loading file:', error);
       setContent('');
@@ -122,17 +183,32 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
     }
   };
 
-  const saveFile = useCallback(async () => {
+  const saveFile = useCallback(async (saveAsPath?: string) => {
+    const pathToSave = saveAsPath || currentFilePath;
+    if (!pathToSave) {
+      // If no path, show save dialog
+      setFilePickerMode('save');
+      setShowFilePicker(true);
+      return;
+    }
+
     const currentContent = contentRef.current;
     if (currentContent === null || currentContent === undefined) return;
 
     try {
-      await systemApi.fileSystem.writeFile(filePath, currentContent);
+      await systemApi.fileSystem.writeFile(pathToSave, currentContent);
       setIsDirty(false);
+
+      if (saveAsPath && saveAsPath !== currentFilePath) {
+        setCurrentFilePath(saveAsPath);
+        if (onFileChange) {
+          onFileChange(saveAsPath);
+        }
+      }
     } catch (error) {
       console.error('Error saving file:', error);
     }
-  }, [filePath]);
+  }, [currentFilePath, onFileChange]);
 
   const handleChange = useCallback((value: string | undefined) => {
     if (isDisposedRef.current) return;
@@ -188,14 +264,27 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
   }, [getEditorValue]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.ctrlKey && e.key === 's') {
-      e.preventDefault();
-      const currentValue = getEditorValue();
-      if (currentValue !== contentRef.current) {
-        setContent(currentValue);
-        contentRef.current = currentValue;
+    if (e.ctrlKey) {
+      switch (e.key.toLowerCase()) {
+        case 's':
+          e.preventDefault();
+          const currentValue = getEditorValue();
+          if (currentValue !== contentRef.current) {
+            setContent(currentValue);
+            contentRef.current = currentValue;
+          }
+          saveFile();
+          break;
+        case 'o':
+          e.preventDefault();
+          setFilePickerMode('open');
+          setShowFilePicker(true);
+          break;
+        case 'n':
+          e.preventDefault();
+          handleCreateNew();
+          break;
       }
-      saveFile();
     }
   }, [saveFile, getEditorValue]);
 
@@ -293,9 +382,48 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
     }
   }, []);
 
+  // File picker handlers
+  const handleFileSelect = (filePath: string) => {
+    setShowFilePicker(false);
+
+    if (filePickerMode === 'open') {
+      loadFile(filePath);
+    } else {
+      // Save mode
+      saveFile(filePath);
+    }
+  };
+
+  const handleFilePickerCancel = () => {
+    setShowFilePicker(false);
+  };
+
+  const handleOpenFile = () => {
+    setFilePickerMode('open');
+    setShowFilePicker(true);
+  };
+
+  const handleCreateNew = () => {
+    setCurrentFilePath(null);
+    setContent('');
+    contentRef.current = '';
+    setIsDirty(false);
+
+    if (onFileChange) {
+      onFileChange('');
+    }
+  };
+
+  const handleSaveAs = () => {
+    setFilePickerMode('save');
+    setShowFilePicker(true);
+  };
+
   useEffect(() => {
-    loadFile();
-  }, [filePath]);
+    if (initialFilePath && initialFilePath !== currentFilePath) {
+      loadFile(initialFilePath);
+    }
+  }, [initialFilePath]);
 
   useEffect(() => {
     window.addEventListener('focus', handleWindowFocus);
@@ -317,14 +445,39 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
   }, [handleWindowFocus, handleWindowBlur, handleKeyDown]);
 
   useEffect(() => {
-    if (!isWindowActive && isDirty) {
+    if (!isWindowActive && isDirty && currentFilePath) {
       const autoSaveTimer = setTimeout(() => {
         saveFile();
       }, 1000);
 
       return () => clearTimeout(autoSaveTimer);
     }
-  }, [isWindowActive, isDirty, saveFile]);
+  }, [isWindowActive, isDirty, saveFile, currentFilePath]);
+
+  // If no file is selected, show welcome screen
+  if (!currentFilePath && !loading) {
+    return (
+      <div className={styles.container}>
+        <FilePickerWelcome
+          onOpenFile={handleOpenFile}
+          onCreateNew={handleCreateNew}
+        />
+
+        {showFilePicker && (
+          <FilePicker
+            isOpen={showFilePicker}
+            onFileSelect={handleFileSelect}
+            onCancel={handleFilePickerCancel}
+            mode={filePickerMode}
+            title={filePickerMode === 'open' ? 'Open File' : 'Save File As'}
+            fileExtensions={['.txt', '.js', '.ts', '.jsx', '.tsx', '.json', '.md', '.html', '.css', '.py', '.java', '.cpp', '.c']}
+            showRecentFiles={true}
+            defaultFileName={filePickerMode === 'save' ? 'untitled.txt' : ''}
+          />
+        )}
+      </div>
+    );
+  }
 
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;
@@ -335,13 +488,26 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
       <div className={styles.editor}>
         <div className={styles.toolbar}>
           <span className={styles.filename}>
-            {filePath.split('/').pop()}
+            {currentFilePath ? currentFilePath.split('/').pop() : 'Untitled'}
             {isDirty && ' *'}
             {!isWindowActive && ' (background)'}
           </span>
           <div className={styles.actions}>
-            <button onClick={saveFile} disabled={!isDirty || !editorReady}>
-              Save {isDirty && !isWindowActive ? '(auto)' : ''}
+            <button onClick={handleOpenFile} title="Open File (Ctrl+O)">
+              📂 Open
+            </button>
+            <button onClick={handleCreateNew} title="New File (Ctrl+N)">
+              📄 New
+            </button>
+            <button
+              onClick={() => saveFile()}
+              disabled={!isDirty || !editorReady}
+              title="Save File (Ctrl+S)"
+            >
+              💾 Save {isDirty && !isWindowActive ? '(auto)' : ''}
+            </button>
+            <button onClick={handleSaveAs} title="Save As">
+              💾 Save As
             </button>
             <button onClick={reloadEditor} style={{ marginLeft: '8px', fontSize: '12px' }}>
               🔄 Reload
@@ -357,7 +523,7 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
           <Editor
             key={editorKey}
             height="100%"
-            language={getLanguage(filePath)}
+            language={currentFilePath ? getLanguage(currentFilePath) : 'plaintext'}
             value={content}
             onChange={handleChange}
             onMount={handleEditorDidMount}
@@ -386,6 +552,20 @@ const TextEditor: React.FC<FileEditorProps> = React.memo(({ filePath }) => {
             }}
           />
         </div>
+
+        {showFilePicker && (
+          <FilePicker
+            isOpen={showFilePicker}
+            onFileSelect={handleFileSelect}
+            onCancel={handleFilePickerCancel}
+            mode={filePickerMode}
+            title={filePickerMode === 'open' ? 'Open File' : 'Save File As'}
+            fileExtensions={['.txt', '.js', '.ts', '.jsx', '.tsx', '.json', '.md', '.html', '.css', '.py', '.java', '.cpp', '.c']}
+            showRecentFiles={true}
+            defaultFileName={filePickerMode === 'save' && currentFilePath ?
+              currentFilePath.split('/').pop() : 'untitled.txt'}
+          />
+        )}
       </div>
     </EditorErrorBoundary>
   );

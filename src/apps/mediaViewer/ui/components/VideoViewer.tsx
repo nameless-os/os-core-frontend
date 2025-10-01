@@ -46,7 +46,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({
 
   return (
     <>
-      <button className={styles.media} onClick={onTogglePlayPause}>
+      <div className={styles.media} onClick={onTogglePlayPause}>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <video
           ref={videoRef}
@@ -69,7 +69,7 @@ export const VideoViewer: React.FC<VideoViewerProps> = ({
             <FontAwesomeIcon icon={faPlay} />
           </button>
         )}
-      </button>
+      </div>
       <VideoControls
         videoState={videoState}
         uiVisible={uiVisible}

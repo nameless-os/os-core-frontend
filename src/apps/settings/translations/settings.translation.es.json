@@ -4,11 +4,13 @@
   "theme": "Tema",
   "reset": "Restablecer",
   "languages": {
-    "en": "Inglés",
-    "ru": "Ruso",
+    "en": "English",
+    "ru": "Русский",
     "es": "Español",
-    "ja": "Japonés",
-    "ko": "Coreano"
+    "ja": "日本語",
+    "ko": "한국어",
+    "th": "ไทย",
+    "vi": "Tiếng Việt"
   },
   "backgrounds": {
     "Planet": "Planeta",

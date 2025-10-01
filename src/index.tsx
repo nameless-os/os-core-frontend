@@ -5,17 +5,24 @@ import App from './App';
 import { initCoreServices } from './initCoreServices';
 import { AppId, CoreAPI } from '@nameless-os/sdk';
 import { registerBaseApps } from './api/app/initAppAPI';
+import { IconManager } from '@Features/icon/icon.manager';
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
 
 const systemApi: CoreAPI = await initCoreServices();
-console.log(systemApi, 'initCoreServices');
+export const iconManagerInstance = new IconManager(systemApi);
 window.nameless_os = {
-  registerExternalApp: (app) => ({
-    appId: systemApi.app.registerApp(app) as AppId,
-    apis: systemApi,
-  }),
+  registerExternalApp: (app) => {
+    if (app.persistentAppTypeId !== 'minesweeper') {
+      iconManagerInstance.createAppIcon(app.persistentAppTypeId, app);
+    }
+
+    return {
+      appId: systemApi.app.registerApp(app) as AppId,
+      apis: systemApi,
+    };
+  },
 };
 registerBaseApps(systemApi);
 

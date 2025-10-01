@@ -100,7 +100,7 @@ export const Window: FC<Props> = ({ windowProps }: Props) => {
             {!windowProps.fullscreen ? (
               <div
                 className={`${styles.windowTop} ${windowProps.focused ? styles.active : styles.inactive}`}
-                style={{ width: windowProps.fullscreen ? '100%' : size.width }}
+                style={{ width: windowProps.fullscreen ? '100%' : size.width - 6 }}
                 ref={windowTop}
                 tabIndex={0}
                 role="button"
@@ -134,7 +134,7 @@ export const Window: FC<Props> = ({ windowProps }: Props) => {
                 </div>
               </div>
             ) : null}
-            <div style={{ width: windowProps.fullscreen ? '100vw' : size.width - 4, height: windowProps.fullscreen ? '100vh' : size.height - 35 }} className={styles.windowBody} role="button" tabIndex={0}>
+            <div style={{ width: windowProps.fullscreen ? '100vw' : size.width - 6, height: windowProps.fullscreen ? '100vh' : size.height - 35 }} className={styles.windowBody} role="button" tabIndex={0}>
               {MemoizedContent}
             </div>
           </Resizable>

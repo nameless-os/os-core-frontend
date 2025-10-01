@@ -267,3 +267,157 @@
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Welcome screen styles */
+.welcomeContent {
+  max-width: 500px;
+  text-align: center;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.mediaIcon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.welcomeContent h2 {
+  margin: 0 0 16px 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--text);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcomeContent p {
+  margin: 0 0 32px 0;
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.supportedFormats {
+  margin: 32px 0;
+  padding: 24px;
+  background: var(--panel);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.supportedFormats p {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.formatList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.formatList span {
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+}
+
+.shortcuts {
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 32px;
+}
+
+.shortcuts p {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.shortcuts ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shortcuts li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.shortcuts kbd {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+  color: var(--text);
+  min-width: 70px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.primaryBtn {
+  animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+.supportedFormats {
+  animation: fadeIn 0.6s ease-out 0.3s both;
+}
+
+.shortcuts {
+  animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .welcomeContent {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  .welcomeContent h2 {
+    font-size: 28px;
+  }
+
+  .mediaIcon {
+    font-size: 48px;
+  }
+
+  .supportedFormats,
+  .shortcuts {
+    padding: 20px;
+    margin-top: 24px;
+  }
+
+  .formatList {
+    font-size: 13px;
+  }
+}

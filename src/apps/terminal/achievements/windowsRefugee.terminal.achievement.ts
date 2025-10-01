@@ -5,7 +5,7 @@ export function initWindowsRefugeeTerminalAchievement(systemApi: CoreAPI) {
     id: 'terminal_windows_refugee',
     name: 'Windows Refugee',
     description: 'Tried to use "dir" instead of "ls" - old habits die hard!',
-    icon: '🪟',
+    icon: 'assets/images/icons/terminal.svg',
     category: 'app',
     rarity: 'common',
     type: 'conditional',
@@ -14,6 +14,6 @@ export function initWindowsRefugeeTerminalAchievement(systemApi: CoreAPI) {
       type: 'event',
     },
     points: 10,
-    hidden: false
+    hidden: true,
   });
 }

@@ -21,6 +21,7 @@
     "framer-motion": "^12.8.0",
     "html2canvas": "^1.4.1",
     "i18next": "^25.0.1",
+    "js-dos": "^8.3.20",
     "re-resizable": "^6.11.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

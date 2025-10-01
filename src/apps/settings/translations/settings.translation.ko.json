@@ -4,11 +4,13 @@
   "theme": "테마",
   "reset": "재설정",
   "languages": {
-    "en": "영어",
-    "ru": "러시아어",
-    "es": "스페인어",
-    "ja": "일본어",
-    "ko": "한국어"
+    "en": "English",
+    "ru": "Русский",
+    "es": "Español",
+    "ja": "日本語",
+    "ko": "한국어",
+    "th": "ไทย",
+    "vi": "Tiếng Việt"
   },
   "backgrounds": {
     "Planet": "행성",

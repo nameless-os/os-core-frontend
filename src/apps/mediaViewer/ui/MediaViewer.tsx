@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { FilePicker } from '@Components/FilePicker/FilePicker'; // Adjust path as needed
 import styles from './mediaViewer.module.css';
-import { MediaViewerProps } from '../types/mediaTypes';
 import { getFileName } from '../utils/mediaUtils';
 import { useMediaLoader } from '../hooks/useMediaLoader';
 import { useImageControls } from '../hooks/useImageControls';
@@ -13,19 +13,64 @@ import { ErrorState } from './components/ErrorState';
 import { ImageViewer } from './components/ImageViewer';
 import { VideoViewer } from './components/VideoViewer';
 
+interface EnhancedMediaViewerProps {
+  filePath?: string; // Make optional
+  onFileChange?: (filePath: string) => void;
+}
+
+// Welcome screen component for media viewer
+const MediaWelcome: React.FC<{
+  onOpenFile: () => void;
+}> = ({ onOpenFile }) => {
+  return (
+    <div className={styles.stateCenter}>
+      <div className={styles.welcomeContent}>
+        <div className={styles.mediaIcon}>📷</div>
+        <h2>Media Viewer</h2>
+        <p>Select a media file to get started</p>
+        <button
+          className={styles.primaryBtn}
+          onClick={onOpenFile}
+        >
+          📂 Open Media File
+        </button>
+        <div className={styles.supportedFormats}>
+          <p>Supported formats:</p>
+          <div className={styles.formatList}>
+            <span>Images: JPG, PNG, GIF, WEBP, SVG</span>
+            <span>Videos: MP4, WEBM, OGV, AVI, MOV</span>
+          </div>
+        </div>
+        <div className={styles.shortcuts}>
+          <p>Keyboard shortcuts:</p>
+          <ul>
+            <li><kbd>Ctrl+O</kbd> - Open file</li>
+            <li><kbd>F</kbd> - Toggle fullscreen</li>
+            <li><kbd>Space</kbd> - Play/Pause (video)</li>
+            <li><kbd>+/-</kbd> - Zoom in/out (image)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // eslint-disable-next-line react/prop-types
-const MediaViewer: React.FC<MediaViewerProps> = React.memo(({ filePath }) => {
+const MediaViewer: React.FC<EnhancedMediaViewerProps> = React.memo(({
+                                                                      filePath: initialFilePath,
+                                                                      onFileChange
+                                                                    }) => {
+  const [currentFilePath, setCurrentFilePath] = useState<string | null>(initialFilePath || null);
+  const [showFilePicker, setShowFilePicker] = useState(false);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { mediaUrl, kind, loading, error, loadMedia, cleanup } = useMediaLoader(filePath);
+  const { mediaUrl, kind, loading, error, loadMedia, cleanup } = useMediaLoader(currentFilePath);
 
   const imageControls = useImageControls();
-
   const videoControls = useVideoControls();
-
   const { isFullscreen, toggleFullscreen } = useFullscreen(wrapperRef);
-
   const { uiVisible, handleUserActivity } = useUIVisibility(
     videoControls.playing,
     kind === 'video'
@@ -45,17 +90,45 @@ const MediaViewer: React.FC<MediaViewerProps> = React.memo(({ filePath }) => {
       if (video) {
         videoControls.toggleMute(video);
       }
-    }
+    },
+    onOpenFile: () => setShowFilePicker(true) // Add open file shortcut
   });
 
   useEffect(() => {
-    loadMedia();
-  }, [loadMedia]);
+    if (currentFilePath) {
+      loadMedia();
+    }
+  }, [loadMedia, currentFilePath]);
 
   useEffect(() => {
     return cleanup;
   }, [cleanup]);
 
+  useEffect(() => {
+    if (initialFilePath && initialFilePath !== currentFilePath) {
+      setCurrentFilePath(initialFilePath);
+    }
+  }, [initialFilePath]);
+
+  // FilePicker handlers
+  const handleFileSelect = (filePath: string) => {
+    setShowFilePicker(false);
+    setCurrentFilePath(filePath);
+
+    if (onFileChange) {
+      onFileChange(filePath);
+    }
+  };
+
+  const handleFilePickerCancel = () => {
+    setShowFilePicker(false);
+  };
+
+  const handleOpenFile = () => {
+    setShowFilePicker(true);
+  };
+
+  // Media event handlers
   const handleImageWheel = (e: React.WheelEvent) => {
     if (kind !== 'image') return;
     e.preventDefault();
@@ -124,19 +197,86 @@ const MediaViewer: React.FC<MediaViewerProps> = React.memo(({ filePath }) => {
     }
   };
 
+  // If no file is selected, show welcome screen
+  if (!currentFilePath) {
+    return (
+      <div className={styles.wrapper}>
+        <MediaWelcome onOpenFile={handleOpenFile} />
+
+        {showFilePicker && (
+          <FilePicker
+            isOpen={showFilePicker}
+            onFileSelect={handleFileSelect}
+            onCancel={handleFilePickerCancel}
+            mode="open"
+            title="Open Media File"
+            fileExtensions={[
+              '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico',
+              '.mp4', '.webm', '.ogv', '.avi', '.mov', '.wmv', '.flv', '.mkv',
+            ]}
+            showRecentFiles={true}
+            recentFilesKey="recentMediaFiles"
+            startPath="/home"
+          />
+        )}
+      </div>
+    );
+  }
+
   if (loading) {
     return <LoadingState />;
   }
 
   if (error) {
-    return <ErrorState error={error} onRetry={loadMedia} />;
+    return (
+      <div className={styles.wrapper}>
+        <ErrorState error={error} onRetry={loadMedia} />
+
+        {showFilePicker && (
+          <FilePicker
+            isOpen={showFilePicker}
+            onFileSelect={handleFileSelect}
+            onCancel={handleFilePickerCancel}
+            mode="open"
+            title="Open Media File"
+            fileExtensions={[
+              '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico',
+              '.mp4', '.webm', '.ogv', '.avi', '.mov', '.wmv', '.flv', '.mkv',
+            ]}
+            showRecentFiles={true}
+            recentFilesKey="recentMediaFiles"
+            startPath="/home"
+          />
+        )}
+      </div>
+    );
   }
 
   if (!mediaUrl) {
-    return <ErrorState error="No media to display" onRetry={loadMedia} />;
+    return (
+      <div className={styles.wrapper}>
+        <ErrorState error="No media to display" onRetry={loadMedia} />
+        {showFilePicker && (
+          <FilePicker
+            isOpen={showFilePicker}
+            onFileSelect={handleFileSelect}
+            onCancel={handleFilePickerCancel}
+            mode="open"
+            title="Open Media File"
+            fileExtensions={[
+              '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico',
+              '.mp4', '.webm', '.ogv', '.avi', '.mov', '.wmv', '.flv', '.mkv',
+            ]}
+            showRecentFiles={true}
+            recentFilesKey="recentMediaFiles"
+            startPath="/home"
+          />
+        )}
+      </div>
+    );
   }
 
-  const fileName = getFileName(filePath);
+  const fileName = getFileName(currentFilePath);
 
   return (
     <div
@@ -146,6 +286,20 @@ const MediaViewer: React.FC<MediaViewerProps> = React.memo(({ filePath }) => {
       onMouseLeave={() => handleUserActivity()}
       onDoubleClick={toggleFullscreen}
     >
+      {/* Add Open File button to top bar */}
+      <div className={`${styles.topBar} ${uiVisible ? styles.visible : styles.hidden}`}>
+        <div className={styles.title}>{fileName}</div>
+        <div className={styles.topActions}>
+          <button
+            className={styles.iconBtn}
+            onClick={handleOpenFile}
+            title="Open File (Ctrl+O)"
+          >
+            📂
+          </button>
+        </div>
+      </div>
+
       {kind === 'image' && (
         <ImageViewer
           mediaUrl={mediaUrl}
@@ -182,6 +336,23 @@ const MediaViewer: React.FC<MediaViewerProps> = React.memo(({ filePath }) => {
           onVolumeChange={handleVolumeChange}
           onSeek={handleSeek}
           onToggleFullscreen={toggleFullscreen}
+        />
+      )}
+
+      {showFilePicker && (
+        <FilePicker
+          isOpen={showFilePicker}
+          onFileSelect={handleFileSelect}
+          onCancel={handleFilePickerCancel}
+          mode="open"
+          title="Open Media File"
+          fileExtensions={[
+            '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico',
+            '.mp4', '.webm', '.ogv', '.avi', '.mov', '.wmv', '.flv', '.mkv',
+          ]}
+          showRecentFiles={true}
+          recentFilesKey="recentMediaFiles"
+          startPath="/home"
         />
       )}
     </div>

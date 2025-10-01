@@ -12,9 +12,10 @@ function registerMediaViewerApp(systemApi: CoreAPI) {
       'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico',
       'mp4', 'webm', 'ogg', 'ogv', 'avi', 'mov'
     ],
-    launch: async (instanceId: AppInstanceId,  { filePath }) => {
+    launch: async (instanceId: AppInstanceId,  data) => {
+      const filePath = data?.filePath;
       apis.windowManager.openWindow({
-        title: `Media Viewer - ${filePath.split('/').pop()}`,
+        title: filePath ? `Media Viewer - ${filePath.split('/').pop()}` : 'Media Viewer',
         appInstanceId: instanceId,
         size: { width: 800, height: 600 },
         component: () => <MediaViewer filePath={filePath} />,

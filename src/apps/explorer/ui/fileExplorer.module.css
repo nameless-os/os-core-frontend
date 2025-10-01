@@ -145,8 +145,7 @@
 
 .fileListHeader {
   display: grid;
-  grid-template-columns: 1fr 120px 180px;
-  gap: 12px;
+  grid-template-columns: 1fr 150px 180px;
   padding: 8px 12px;
   background-color: var(--secondaryColor, #282828);
   border-bottom: 1px solid var(--secondaryColor, #282828);
@@ -158,8 +157,7 @@
 
 .fileItem {
   display: grid;
-  grid-template-columns: 1fr 120px 180px;
-  gap: 12px;
+  grid-template-columns: 1fr 150px 180px;
   padding: 8px 12px;
   border-bottom: 1px solid rgba(128, 128, 128, 0.1);
   cursor: pointer;
@@ -508,4 +506,259 @@
   font-size: 12px;
   color: #dc3545;
   font-style: italic;
+}
+/* Исправления для контекст-меню */
+.contextMenu {
+  position: fixed;
+  background: var(--windowTopBackground, rgba(23, 23, 24, 0.97));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 6px;
+  padding: 6px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  min-width: 180px;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  animation: contextMenuShow 0.15s ease-out;
+}
+
+@keyframes contextMenuShow {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.contextItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: var(--fontColor, #ececec);
+  transition: background-color 0.1s ease;
+}
+
+.contextItem:hover {
+  background-color: var(--onHoverBottomTab, #717272);
+}
+
+.contextItem svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.contextSeparator {
+  height: 1px;
+  background-color: var(--secondaryColor, #282828);
+  margin: 6px 0;
+}
+
+/* Улучшения для выделения файлов */
+.fileItem.selected {
+  background-color: var(--activeBottomTab, #272827);
+  border-left: 3px solid var(--bottomTabBorder, #c1c3c1);
+}
+
+.fileItem:hover:not(.selected) {
+  background-color: rgba(113, 114, 114, 0.3);
+}
+
+/* Улучшения для drag overlay */
+.dragDropOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 123, 255, 0.1);
+  border: 2px dashed #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+  animation: dragPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes dragPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.dragDropIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.8;
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Диалоги */
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.dialog {
+  background: var(--windowBodyBackground, rgb(23, 23, 24));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 8px;
+  min-width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: dialogSlideIn 0.2s ease-out;
+}
+
+@keyframes dialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Прогресс загрузки */
+.uploadProgress {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--windowBodyBackground, rgb(23, 23, 24));
+  border: 1px solid var(--secondaryColor, #282828);
+  border-radius: 8px;
+  min-width: 320px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 200;
+  max-height: 300px;
+  overflow-y: auto;
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Ошибки */
+.statusBar.error {
+  background-color: #722f37;
+  color: #f8d7da;
+  animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+
+.fileIcon.customIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.fileListHeader {
+  display: grid;
+  grid-template-columns: 1fr 150px 200px;
+  padding: 0;
+  background-color: var(--secondaryColor, #282828);
+  border-bottom: 1px solid var(--secondaryColor, #282828);
+}
+
+.headerButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px;
+  background: none;
+  border: none;
+  color: var(--fontColor, #ececec);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  gap: 8px;
+  user-select: none;
+}
+
+.headerButton:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.headerButton.activeSort {
+  color: var(--bottomTabBorder, #c1c3c1);
+  background-color: rgba(193, 195, 193, 0.1);
+}
+
+.sortIcon {
+  font-size: 10px;
+  opacity: 0.8;
+  flex-shrink: 0;
+  width: 10px;
+  transition: opacity 0.2s ease;
+}
+
+.sortIconPlaceholder {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.headerButton:hover .sortIcon {
+  opacity: 1;
+}
+
+.fileList {
+  transition: all 0.3s ease;
+}
+
+.sortTransition {
+  animation: sortFade 0.2s ease-in-out;
+}
+
+@keyframes sortFade {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.headerButton:active {
+  transform: translateY(1px);
+  background-color: rgba(255, 255, 255, 0.1);
 }
